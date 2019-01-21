@@ -1,6 +1,9 @@
+import uuid
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-import uuid
+import search as s
+
+
 
 # configuration
 DEBUG = True
@@ -33,6 +36,35 @@ BOOKS = [
     }
 ]
 
+
+@app.route('/simple', methods=['GET', 'POST'])
+def simple():
+    response_object = {'status': 'success'}
+    if request.method == 'POST':
+        post_data = request.get_json()
+        # get SIMPLE query and call solr to get result
+        query = post_data["query"]
+        
+        res = s.search(query)
+        # restructure json 
+        response_object["QTime"] = res["responseHeader"]["QTime"]
+
+        response_object["docs"] = {}
+        # convert docs string to json
+        for i in range(len(res["response"]["docs"])):
+            response_object['docs'][i] = res["response"]["docs"][i]
+        
+        # response_object["docs"] = res["response"]["docs"]
+        print(response_object)
+        # print(res["response"]["docs"])
+    return jsonify(response_object)
+
+
+
+
+
+
+
 # sanity check route
 @app.route('/ping', methods=['GET'])
 def ping_pong():
@@ -55,12 +87,7 @@ def all_books():
     return jsonify(response_object)
 
 
-def remove_book(book_id):
-    for book in BOOKS:
-        if book['id'] == book_id:
-            BOOKS.remove(book)
-            return True
-    return False
+
 
 @app.route('/books/<book_id>', methods=['PUT', 'DELETE'])
 def single_book(book_id):
@@ -80,5 +107,13 @@ def single_book(book_id):
         response_object['message'] = 'Book removed!'
     return jsonify(response_object)
 
+
+def remove_book(book_id):
+    for book in BOOKS:
+        if book['id'] == book_id:
+            BOOKS.remove(book)
+            return True
+    return False
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001)
+    app.run(host='0.0.0.0', port=5000)
