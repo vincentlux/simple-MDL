@@ -55,7 +55,7 @@ def simple():
             response_object['docs'][i] = res["response"]["docs"][i]
         
         # response_object["docs"] = res["response"]["docs"]
-        print(response_object)
+        # print(response_object)
         # print(res["response"]["docs"])
     return jsonify(response_object)
 
