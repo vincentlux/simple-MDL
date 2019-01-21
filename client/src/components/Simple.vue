@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="header">
+    <h1 class="cover-heading ">SimpLe search</h1>
     <b-form @submit="onSubmit" @reset="onReset" >
-
-      <b-form-group id="exampleInputGroup2"
-                    label="SIMPLE query:"
-                    label-for="exampleInput2">
-        <b-form-input id="exampleInput2"
+      <b-form-group id="Inp1"
+                    label-sr-only
+                    label-for="Inp1">
+        <b-form-input id="Inp2"
                       type="text"
                       v-model="form.name"
                       required
@@ -13,38 +13,39 @@
         </b-form-input>
       </b-form-group>
 
-      <b-button type="submit" variant="primary">Submit</b-button>
-      <b-button type="reset" variant="danger">Reset</b-button>
+      <b-button class = "button" type="submit" variant="warning">Submit</b-button>
+      <b-button class = "button" type="reset" variant="warning">Reset</b-button>
     </b-form>
 
     
-    <b-card class="text-center" v-show="isResult">
-   Fetched  {{ this.num }} result(s) by {{ this.time }} ms.
+    <b-card class="text" v-show="isResult&noError">
+   Fetched  {{ this.num }} result(s) by {{ this.time }} s.
     </b-card>
 
-  <div class="searchResult" v-show="isResult" transition="expand">
+    <b-card class="text-center" v-show="!noError">
+   Error! Please refer to https://github.com/vincentlux/Cymantix/wiki 
+    </b-card>
+
+  <div class="searchResult" v-show="isResult&noError" transition="expand">
     <a v-for="elem in resObj" :key="elem">
 
       
     <b-card nobody>
         <h3 class="card-text">{{ elem.subject[0] }}</h3>
         <p class="card-text">
-            From: {{ elem.from[0] }}
+            Date: {{ elem.date.replace("Z", " ").replace("T", " ") }}
         </p>
         <p class="card-text">
-            From_name: {{ elem.from_name[0] }}
+            From: {{ elem.from[0] }}
+            From_name: {{ elem.from_name[0].replace(/ *\<[^>]*\> */g, "") }}
         </p>
         <p class="card-text">
             To: {{ elem.to[0] }}
+            To_name: {{ elem.to_name[0].replace(/<(?!\/?p\b)[^>]+>/ig, "") }}
         </p>
+
         <p class="card-text">
-            To_name: {{ elem.to_name[0] }}
-        </p>
-        <p class="card-text">
-            Date: {{ elem.date }}
-        </p>
-        <p class="card-text">
-            Content: {{ elem.content }}
+            {{ elem.content[0] }}
         </p>
     </b-card>
   <div>
@@ -60,6 +61,7 @@
 
 <script>
 import axios from 'axios';
+
 export default {
   data () {
     return {
@@ -69,30 +71,34 @@ export default {
       time:'',
       num:'',
       resObj:null,
-      isResult:false
+      isResult:false,
+      noError:true
      // show: true
     }
   },
   methods: {
 
     fetchResult(query){
-      console.log(JSON.stringify(query));
+      // console.log(JSON.stringify(query));
       const path = 'http://localhost:5000/simple';
       // Axios
       axios.post(path, query)
         .then((res)=>{
-            console.log(res);
-            this.time = res.data.QTime;
+            // console.log(res);
+            this.time = res.data.QTime / 1000;
             this.num = Object.keys(res.data.docs).length;
             this.resObj = res.data.docs;
-            console.log(this.num);
+            // console.log(this.num);
             this.isResult = true;
+            this.noError = true;
             // this.title = res.
 
         })
         .catch((error) => {
           // eslint-disable-next-line
           console.error(error);
+          console.log("Error handling here")
+          this.noError = false;
         });
 
     },
