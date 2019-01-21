@@ -23,7 +23,7 @@
     </b-card>
 
     <b-card class="text-center" v-show="!noError">
-   Error! Please refer to https://github.com/vincentlux/Cymantix/wiki 
+   Error! Please refer to  <a href="https://github.com/vincentlux/Cymantix/wiki">Project Wiki Page</a>
     </b-card>
 
   <div class="searchResult" v-show="isResult&noError" transition="expand">
