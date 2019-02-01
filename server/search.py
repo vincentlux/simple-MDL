@@ -6,10 +6,10 @@ import cymantix_grammar as cg
 
 
 def search(command, test=False):
-    # convert json to solr query 
+    # convert json to solr query
 
 
-    # Get json file 
+    # Get json file
     inp_json = cg.c_json(command)
     # define field
     try:
@@ -53,7 +53,7 @@ def search(command, test=False):
                 num = eval(''.join([n for n in inp_json["time"] if n.isdigit()]))
             except:
                 num = 1
-            
+
             if "day" in inp_json["time"].lower():
                 date = "date:[2002-03-07T00:00:00Z-{:d}DAY TO NOW]".format(num)
             elif "month" in inp_json["time"].lower():
@@ -75,12 +75,12 @@ def search(command, test=False):
 
     # https://github.com/django-haystack/pysolr
     if test: # show mode
-        solr = pysolr.Solr("http://104.248.61.45:8983/solr/test/")
+        solr = pysolr.Solr("http://104.248.61.45:8983/solr/mdl/")
     else: # api mode; return json
-        solr = pysolr.Solr("http://104.248.61.45:8983/solr/test/", results_cls=dict)
+        solr = pysolr.Solr("http://104.248.61.45:8983/solr/mdl/", results_cls=dict)
     # results = solr.search(q="from_name:Yates, Mike AND subject:* AND to_name:*", sort="date desc", rows=100)
     results = solr.search(q=query, fq=fquery, sort="date desc", rows=num_rows)
-    
+
     return results
 
 if __name__ == "__main__":

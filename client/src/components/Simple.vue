@@ -27,7 +27,7 @@
     </b-card>
 
   <div class="searchResult" v-show="isResult&noError" transition="expand">
-    <a v-for="elem in resObj" :key="elem">
+    <a v-for="elem in resObj" :key="elem.message_id">
 
       
     <b-card nobody>
@@ -39,9 +39,17 @@
             From: {{ elem.from[0] }}
             From_name: {{ elem.from_name[0].replace(/ *\<[^>]*\> */g, "") }}
         </p>
-        <p class="card-text">
+        <p class="card-text" v-if="elem.to != null">
             To: {{ elem.to[0] }}
             To_name: {{ elem.to_name[0].replace(/<(?!\/?p\b)[^>]+>/ig, "") }}
+        </p>
+        <p class="card-text" v-if="elem.to == null && elem.to_name != null">
+            To: {{ elem.to }}
+            To_name: {{ elem.to_name[0].replace(/<(?!\/?p\b)[^>]+>/ig, "") }}
+        </p>
+        <p class="card-text" v-if="elem.to == null && elem.to_name == null">
+            To: {{ elem.to }}
+            To_name: {{ elem.to_name }}
         </p>
 
         <p class="card-text">
@@ -70,7 +78,8 @@ export default {
       },
       time:'',
       num:'',
-      resObj:null,
+      // resObj:null,
+      resObj: null,
       isResult:false,
       noError:true
      // show: true
@@ -80,16 +89,20 @@ export default {
 
     fetchResult(query){
       // console.log(JSON.stringify(query));
-      const path = 'http://localhost:5000/simple';
+      const path = 'http://167.99.3.111:5001/simple';
       // Axios
       axios.post(path, query)
         .then((res)=>{
             // console.log(res);
             this.time = res.data.QTime / 1000;
+            // console.log(this.time);
             this.num = Object.keys(res.data.docs).length;
+            // console.log(this.num);
             this.resObj = res.data.docs;
+            // console.log(this.resObj);
             // console.log(this.num);
             this.isResult = true;
+
             this.noError = true;
             // this.title = res.
 
@@ -114,6 +127,7 @@ export default {
       /* Reset our form values */
       this.form.name = '';
       this.isResult = false;
+      this.noError = true;
     }
   },
 
