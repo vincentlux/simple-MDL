@@ -28,7 +28,7 @@
     </b-card>
   
 
-  <b-pagination size="lg" v-show="isResult&noError" :total-rows="0 || parseInt(this.num)" v-model="currentPage" :per-page="10">
+  <b-pagination v-show="isResult&noError" :total-rows="0 || parseInt(this.num)" v-model="currentPage" :per-page="10">
   </b-pagination>
   <div class="searchResult" v-show="isResult&noError" transition="expand">
         <a v-for="elem in filter(resObj)" :key="elem.message_id">
@@ -61,6 +61,8 @@
     </b-card>
     </a>
   </div>
+  <b-pagination v-show="isResult&noError" :total-rows="0 || parseInt(this.num)" v-model="currentPage" :per-page="10">
+  </b-pagination>
     
 
   </div>
