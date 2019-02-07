@@ -27,11 +27,13 @@
       Error! Please refer to  <a href="https://github.com/vincentlux/Cymantix/wiki">Project Wiki Page</a>
     </b-card>
   
-  <div class="searchResult" v-show="isResult&noError" transition="expand">
-        <a v-for="elem in resObj" :key="elem.message_id">
 
-      
-    <b-card nobody>
+  <b-pagination size="lg" v-show="isResult&noError" :total-rows="0 || parseInt(this.num)" v-model="currentPage" :per-page="10">
+  </b-pagination>
+  <div class="searchResult" v-show="isResult&noError" transition="expand">
+        <a v-for="elem in filter(resObj)" :key="elem.message_id">
+
+    <b-card no-body>
         <h3 class="card-text">{{ elem.subject[0] }}</h3>
         <p class="card-text">
             Date: {{ elem.date.replace("Z", " ").replace("T", " ") }}
@@ -98,8 +100,9 @@
         // resObj:null,
         resObj: null,
         isResult:false,
-        noError:true
+        noError:true,
         // show: true
+        currentPage:1,
       }
     },
     methods: {
@@ -116,7 +119,7 @@
             this.num = Object.keys(res.data.docs).length;
             // console.log(this.num);
             this.resObj = res.data.docs;
-            // console.log(this.resObj);
+            console.log(this.resObj);
             // console.log(this.num);
             this.isResult = true;
 
@@ -133,24 +136,22 @@
 
     },
 
-    onSubmit (evt) {
-      evt.preventDefault();
-    //   alert(JSON.stringify(this.form));
-      
-      const query = {query:this.form.name};
-      console.log(query);
-      this.fetchResult(query);
-    },
+      onSubmit (evt) {
+        evt.preventDefault();
+      //   alert(JSON.stringify(this.form));
+        
+        const query = {query:this.form.name};
+        console.log(query);
+        this.fetchResult(query);
+      },
 
-
-
-
-
-
-
-
-
-
+      filter (_resObj) {
+        if (this.isResult&this.noError){
+          // return _resObj
+          return Object.values(_resObj).slice((this.currentPage-1)*10, (this.currentPage-1)*10+10);
+          
+        }
+      },
 
 
       successCallback(stream) {
