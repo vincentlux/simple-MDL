@@ -61,7 +61,7 @@
     </b-card>
     </a>
   </div>
-  <b-pagination v-show="isResult&noError" :total-rows="0 || parseInt(this.num)" v-model="currentPage" :per-page="10">
+  <b-pagination v-show="isResult&noError" align="center" :total-rows="0 || parseInt(this.num)" v-model="currentPage" :per-page="10">
   </b-pagination>
     
 
