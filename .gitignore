@@ -1,3 +1,6 @@
 node_modules/
+<<<<<<< HEAD
 *.json
 __pycache__/
+=======
+>>>>>>> 307b6878151d39b41e26ad0de583db16e29b1e6a
