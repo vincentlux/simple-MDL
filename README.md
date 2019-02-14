@@ -1,6 +1,4 @@
-Combined real time speech streaming with search
+# Place to learn and build React Native App
 
-Todo:
-1. Pagination
-2. More hints and UI as Javed suggested
-3. Another layer of abstraction to bring speech-converted text to usable MDL query
+## Tutorials to follow:
+https://medium.com/alturasoluciones/creating-a-react-native-redux-application-for-searching-posts-on-medium-618d7aa1e3cf
