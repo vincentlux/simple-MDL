@@ -4,7 +4,8 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  TouchableHighlight
+  TouchableHighlight,
+  axios
 } from 'react-native';
 import { getResult } from './components/GetResult'
 
@@ -28,7 +29,7 @@ export default class SearchComponent extends Component {
     console.log(this.state.username);
     console.log("hi there")
     getResult(this.state.username)
-      .then((responseJson) => { console.log("Response:", responseJson) })
+      .then((responseJson) => { console.log(responseJson) })
       .catch((error) => { console.error(error); });
   }
 
