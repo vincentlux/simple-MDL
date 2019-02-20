@@ -7,7 +7,7 @@ io.on('connection', function (socket) {
 
 // Instantiates a client
    const speech = new Speech.SpeechClient({
-        keyFilename: './simple-MDL-d4dbab56cb6c.json' // file json key
+        keyFilename: './simple-MDL-1e031a0a41da.json' // file json key
    });
     const encoding = 'LINEAR16';
     const sampleRateHertz = 16000;
