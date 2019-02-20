@@ -7,9 +7,7 @@ import cymantix_grammar as cg
 
 def search(command, test=False):
     # convert json to solr query
-
-
-    # Get json file
+    # get json file
     inp_json = cg.c_json(command)
     # define field
     try:

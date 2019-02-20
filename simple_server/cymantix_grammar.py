@@ -1,13 +1,8 @@
 from parsimonious.grammar import Grammar
-import parsimonious
+import re
 import six
+import parsimonious
 import argparse
-
-'''
-TODO
-    1. Add double quote compatibility
-    2. Instance and Class
-'''
 
 # sc: scope
 # op: opration
@@ -16,7 +11,7 @@ grammar = Grammar(
     all             = space op space sc
     sc              = sc_EMAIL_from / sc_EMAIL_attach / sc_EMAIL_piece / space
     sc_EMAIL_piece  = "EMAIL last" space op_LAST_piece
-    sc_EMAIL_from   = "EMAIL from" space op_lit_name
+    sc_EMAIL_from   = "EMAIL" space op_lit_name
     sc_EMAIL_attach = "EMAIL" space sc_attach
     sc_attach       = "MSWORD" / "PDF" / "GIF"
     op              = op_trig space op_first space
@@ -98,13 +93,30 @@ example command:
 """
 
 def c_json(inp):
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument('--command', type=str, default='',
-    #         help='Cymantix command eg. ?LAST all EMAIL from "Mike" ')
-    # args = parser.parse_args()
-    
     # replace double quote to single quote
     command = inp.replace('"', "\'")
     return EntryParser(grammar,command).entry
-    # print(EntryParser(grammar,command).entry)
-    # print(grammar.parse(command))
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--command', type=str, default='', help='Test grammar mode. Cymantix command eg. ?LAST all EMAIL from "Mike" ')
+    args = parser.parse_args()
+    command = args.command.replace('"', "\'")
+    try:
+        res = EntryParser(grammar,command).entry
+        print(res)
+        # print(grammar.parse(command))
+    except parsimonious.exceptions.IncompleteParseError as e:
+        e = re.sub("[\(\[].*?[\)\]]", "", str(e))
+        print(e)
+    except parsimonious.exceptions.ParseError as e:
+        if '?' not in command:
+            print("Missing '?' at the start of the query")
+        else:
+            # remove position indicated
+            e = re.sub("[\(\[].*?[\)\]]", "", str(e))
+            print(e)
+
+
+    
