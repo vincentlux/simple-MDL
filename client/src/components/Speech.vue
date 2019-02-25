@@ -14,9 +14,9 @@
       </b-form-group>
       <b-button class = "button" type="submit" variant="warning">Submit</b-button>
       
-      <b-button class = "button" variant="primary" v-show="btn && !btnReset" v-on:click="startRecording">Start Recording</b-button>
+      <!-- <b-button class = "button" variant="primary" v-show="btn && !btnReset" v-on:click="startRecording">Start Recording</b-button>
       <b-button class = "button" variant="danger" v-show="btnStop" v-on:click="stopRecording">Stop</b-button>
-      <b-button class = "button" variant="danger" v-show="btnReset" v-on:click="redirectError">Reset</b-button>
+      <b-button class = "button" variant="danger" v-show="btnReset" v-on:click="redirectError">Reset</b-button> -->
     </b-form>
 
 
@@ -73,10 +73,10 @@
 
   import axios from 'axios';
 
-  var audioContext = new(window.AudioContext || window.webkitAudioContext)();
-  var socket = io.connect('http://localhost:5000');
-  var ssStream = ss.createStream();
-  var scriptNode;
+  // var audioContext = new(window.AudioContext || window.webkitAudioContext)();
+  // var socket = io.connect('http://localhost:5000');
+  // var ssStream = ss.createStream();
+  // var scriptNode;
   
   export default {
     // inject: ['reload'],
