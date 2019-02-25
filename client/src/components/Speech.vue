@@ -15,8 +15,8 @@
       <b-button class = "button" type="submit" variant="warning">Submit</b-button>
       
       <!-- <b-button class = "button" variant="primary" v-show="btn && !btnReset" v-on:click="startRecording">Start Recording</b-button>
-      <b-button class = "button" variant="danger" v-show="btnStop" v-on:click="stopRecording">Stop</b-button>
-      <b-button class = "button" variant="danger" v-show="btnReset" v-on:click="redirectError">Reset</b-button> -->
+      <b-button class = "button" variant="danger" v-show="btnStop" v-on:click="stopRecording">Stop</b-button> -->
+      <b-button class = "button" variant="danger" v-show="btnReset" v-on:click="redirectError">Reset</b-button>
     </b-form>
 
 
@@ -254,7 +254,7 @@
 
     created() {
       const that = this;
-      console.log(audioContext) 
+      // console.log(audioContext) 
       // console.log("created")
       // console.log(that.result, that.btn, that.btnStop);
       socket.on('SPEECH_RESULTS', function(text) {
