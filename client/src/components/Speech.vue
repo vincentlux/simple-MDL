@@ -123,7 +123,7 @@
             this.num = Object.keys(res.data.docs).length;
             // console.log(this.num);
             this.resObj = res.data.docs;
-            console.log(this.resObj);
+            // console.log(this.resObj);
             // console.log(this.num);
             this.isResult = true;
 
