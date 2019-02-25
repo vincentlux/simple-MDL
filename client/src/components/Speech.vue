@@ -24,7 +24,7 @@
       Fetched  {{ this.num }} result(s) by {{ this.time }} s.
     </b-card>
     <b-card class="text-center" v-show="!noError">
-      Error! Please refer to  <a href="https://github.com/vincentlux/Cymantix/wiki">Project Wiki Page</a>
+      {{ this.errMsg }} Please refer to  <a href="https://github.com/vincentlux/Cymantix/wiki">Project Wiki Page</a>
     </b-card>
   
 
@@ -103,6 +103,7 @@
         resObj: null,
         isResult:false,
         noError:true,
+        errMsg: '',
         // show: true
         currentPage:1,
       }
@@ -124,15 +125,14 @@
             console.log(this.resObj);
             // console.log(this.num);
             this.isResult = true;
-
             this.noError = true;
-            // this.title = res.
-
         })
         .catch((error) => {
           // eslint-disable-next-line
-          console.error(error);
-          console.log("Error handling here")
+          // console.error(error);
+          // console.log(error.response.data.message)
+          this.errMsg =  error.response.data.message
+          // console.log("Error handling here");
           this.noError = false;
         });
 
@@ -252,41 +252,41 @@
       // },
     },
 
-    created() {
-      const that = this;
-      // console.log(audioContext) 
-      // console.log("created")
-      // console.log(that.result, that.btn, that.btnStop);
-      socket.on('SPEECH_RESULTS', function(text) {
-        // console.log(text)
-        if('q' == text){
+    // created() {
+    //   const that = this;
+    //   // console.log(audioContext) 
+    //   // console.log("created")
+    //   // console.log(that.result, that.btn, that.btnStop);
+    //   socket.on('SPEECH_RESULTS', function(text) {
+    //     // console.log(text)
+    //     if('q' == text){
 
-          that.resultError = true;
-          console.log("error")
-        }else{
-          // console.log(text)
+    //       that.resultError = true;
+    //       console.log("error")
+    //     }else{
+    //       // console.log(text)
         
-          // that.textResult = text;
-          that.form.name = text;
-          // console.log("text:")
-          // console.log("2")
-          // // console.log(text)
-        }
-      })
-        if (navigator.mediaDevices.getUserMedia) {
-          // console.log('getUserMedia supported...');
-          navigator.webkitGetUserMedia({ audio: true }, function(stream) {
-            // console.log("stream?");
-            // // console.log(stream);
-            that.successCallback(stream)
-          }, function(error) {
-            // console.log("error2")
-            that.errorCallback(error)
-          });
-        } else {
-          // console.log('getUserMedia not supported on your browser!');
-        }
-      },
+    //       // that.textResult = text;
+    //       that.form.name = text;
+    //       // console.log("text:")
+    //       // console.log("2")
+    //       // // console.log(text)
+    //     }
+    //   })
+    //     if (navigator.mediaDevices.getUserMedia) {
+    //       // console.log('getUserMedia supported...');
+    //       navigator.webkitGetUserMedia({ audio: true }, function(stream) {
+    //         // console.log("stream?");
+    //         // // console.log(stream);
+    //         that.successCallback(stream)
+    //       }, function(error) {
+    //         // console.log("error2")
+    //         that.errorCallback(error)
+    //       });
+    //     } else {
+    //       // console.log('getUserMedia not supported on your browser!');
+    //     }
+    //   },
 
 
     }
