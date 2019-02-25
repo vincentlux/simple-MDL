@@ -1,4 +1,10 @@
-const io = require('socket.io')(5000);
+var app = require('express')();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+
+
+server.listen(5000);
+//const io = require('socket.io')(5000);
 const ss = require('socket.io-stream');
 console.log('Server is starting....DONE');
 io.on('connection', function (socket) {
