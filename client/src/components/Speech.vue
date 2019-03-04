@@ -113,6 +113,7 @@
       fetchResult(query){
       // console.log(JSON.stringify(query));
       const path = 'http://167.99.3.111:5001/simple';
+      // const path = 'http://localhost:5001/simple';
       // Axios
       axios.post(path, query)
         .then((res)=>{
@@ -122,7 +123,7 @@
             this.num = Object.keys(res.data.docs).length;
             // console.log(this.num);
             this.resObj = res.data.docs;
-            console.log(this.resObj);
+            // console.log(this.resObj);
             // console.log(this.num);
             this.isResult = true;
             this.noError = true;
@@ -143,7 +144,7 @@
       //   alert(JSON.stringify(this.form));
         
         const query = {query:this.form.name};
-        console.log(query);
+        // console.log(query);
         this.fetchResult(query);
       },
 

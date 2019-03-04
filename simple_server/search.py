@@ -73,9 +73,11 @@ def search(command, test=False):
 
     # https://github.com/django-haystack/pysolr
     if test: # show mode
-        solr = pysolr.Solr("http://104.248.61.45:8983/solr/mdl/")
+        # solr = pysolr.Solr("http://104.248.61.45:8983/solr/mdl/")
+        solr = pysolr.Solr("http://localhost:8983/solr/mdl/")
     else: # api mode; return json
-        solr = pysolr.Solr("http://104.248.61.45:8983/solr/mdl/", results_cls=dict)
+        # solr = pysolr.Solr("http://104.248.61.45:8983/solr/mdl/", results_cls=dict)
+        solr = pysolr.Solr("http://localhost:8983/solr/mdl/", results_cls=dict)
     # results = solr.search(q="from_name:Yates, Mike AND subject:* AND to_name:*", sort="date desc", rows=100)
     results = solr.search(q=query, fq=fquery, sort="date desc", rows=num_rows)
 

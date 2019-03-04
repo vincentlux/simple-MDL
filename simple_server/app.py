@@ -1,6 +1,6 @@
 import uuid, re
 from flask import Flask, jsonify, request
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import search as s
 
 
@@ -46,6 +46,7 @@ def handle_invalid_usage(error):
 
 
 @app.route('/simple', methods=['GET', 'POST'])
+@cross_origin(origin='*')
 def simple():
     response_object = {'status': 'success'}
     if request.method == 'POST':
@@ -75,6 +76,7 @@ def simple():
 
 # sanity check route
 @app.route('/ping', methods=['GET'])
+@cross_origin(origin='*')
 def ping_pong():
     return jsonify('pong!')
 
