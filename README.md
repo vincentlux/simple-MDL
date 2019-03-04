@@ -2,5 +2,6 @@
 Search without speech input
 
 # nginx setup:
-modify nginx files under `/etc/nginx/sites-available`
-git tracked baseline under `/var/www/html/simple-MDL`
+* modify nginx files under `/etc/nginx/sites-available`
+
+* git tracked baseline under `/var/www/html/simple-MDL`
