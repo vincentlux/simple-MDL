@@ -12,3 +12,7 @@ Search without speech input
 * modify nginx files under `/etc/nginx/sites-available`
 
 * git tracked baseline under `/var/www/html/simple-MDL`
+
+# docker setup
+* reason why using docker: to avoid cors problem
+* `docker run -d -p 5001:5001 --network host vincentlu073/simple-mdl`
