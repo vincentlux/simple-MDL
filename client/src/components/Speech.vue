@@ -72,7 +72,7 @@
 <script>
 
   import axios from 'axios';
-
+  import qs from 'qs';
   // var audioContext = new(window.AudioContext || window.webkitAudioContext)();
   // var socket = io.connect('http://localhost:5000');
   // var ssStream = ss.createStream();
@@ -113,7 +113,7 @@
       fetchResult(query){
       // console.log(JSON.stringify(query));
       const path = 'http://167.99.3.111:5001/simple';
-      // const path = 'http://localhost:5001/simple';
+      //const path = '172.31.94.127:5001/simple';
       // Axios
       axios.post(path, query)
         .then((res)=>{
