@@ -5,7 +5,8 @@ Search without speech input
 * Deployed on ip; waiting for mapping to subdomain of simple.unc.edu
 
 ## todo
-* fix speech cors issue after kaz open 5000
+* fix speech cors issue on port5002 (currently using v2 speech api)
+* build https safe connection so that everywhere can connect
 
 # nginx setup:
 * modify nginx files under `/etc/nginx/sites-available`
