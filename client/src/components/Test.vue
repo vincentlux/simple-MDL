@@ -14,8 +14,8 @@
       </b-form-group>
       <b-button class = "button" type="submit" variant="warning">Submit</b-button>
       
-      <!-- <b-button class = "button" variant="primary" v-show="btn && !btnReset" v-on:click="startRecording">Start Recording</b-button>
-      <b-button class = "button" variant="danger" v-show="btnStop" v-on:click="stopRecording">Stop</b-button> -->
+      <b-button class = "button" variant="primary" v-show="btn && !btnReset" v-on:click="startRecording">Start Recording</b-button>
+      <b-button class = "button" variant="danger" v-show="btnStop" v-on:click="stopRecording">Stop</b-button>
       <b-button class = "button" variant="danger" v-show="btnReset" v-on:click="redirectError">Reset</b-button>
     </b-form>
 
@@ -73,10 +73,11 @@
 
   import axios from 'axios';
   import qs from 'qs';
-  // var audioContext = new(window.AudioContext || window.webkitAudioContext)();
-  // var socket = io.connect('http://localhost:5000');
-  // var ssStream = ss.createStream();
-  // var scriptNode;
+  var audioContext = new(window.AudioContext || window.webkitAudioContext)();
+  //var socket = io.connect('http://3.86.172.253:5002');
+  var socket = io.connect('http://167.99.3.111:5002');
+  var ssStream = ss.createStream();
+  var scriptNode;
   
   export default {
     // inject: ['reload'],
@@ -246,48 +247,48 @@
       },
       redirectError(){
         this.noError = true;
-        window.location.href = "http://localhost:8080/";
+        window.location.href = "http://3.86.172.253:8080/test";
       },
       // reloadPage(){
       //   this.reload();
       // },
     },
 
-    // created() {
-    //   const that = this;
-    //   // console.log(audioContext) 
-    //   // console.log("created")
-    //   // console.log(that.result, that.btn, that.btnStop);
-    //   socket.on('SPEECH_RESULTS', function(text) {
-    //     // console.log(text)
-    //     if('q' == text){
+    created() {
+       const that = this;
+       // console.log(audioContext) 
+       // console.log("created")
+       // console.log(that.result, that.btn, that.btnStop);
+       socket.on('SPEECH_RESULTS', function(text) {
+         // console.log(text)
+         if('q' == text){
 
-    //       that.resultError = true;
-    //       console.log("error")
-    //     }else{
-    //       // console.log(text)
+           that.resultError = true;
+           console.log("error")
+         }else{
+           // console.log(text)
         
-    //       // that.textResult = text;
-    //       that.form.name = text;
-    //       // console.log("text:")
-    //       // console.log("2")
-    //       // // console.log(text)
-    //     }
-    //   })
-    //     if (navigator.mediaDevices.getUserMedia) {
-    //       // console.log('getUserMedia supported...');
-    //       navigator.webkitGetUserMedia({ audio: true }, function(stream) {
-    //         // console.log("stream?");
-    //         // // console.log(stream);
-    //         that.successCallback(stream)
-    //       }, function(error) {
-    //         // console.log("error2")
-    //         that.errorCallback(error)
-    //       });
-    //     } else {
-    //       // console.log('getUserMedia not supported on your browser!');
-    //     }
-    //   },
+           // that.textResult = text;
+           that.form.name = text;
+           // console.log("text:")
+           // console.log("2")
+           // // console.log(text)
+         }
+       })
+         if (navigator.mediaDevices.getUserMedia) {
+           // console.log('getUserMedia supported...');
+           navigator.webkitGetUserMedia({ audio: true }, function(stream) {
+             // console.log("stream?");
+             // // console.log(stream);
+             that.successCallback(stream)
+           }, function(error) {
+             // console.log("error2")
+             that.errorCallback(error)
+           });
+         } else {
+           // console.log('getUserMedia not supported on your browser!');
+         }
+       },
 
 
     }

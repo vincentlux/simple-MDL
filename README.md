@@ -5,8 +5,7 @@ Search without speech input
 * Deployed on ip; waiting for mapping to subdomain of simple.unc.edu
 
 ## todo
-* change and use localhost solr api
-	* solve cors problem 
+* fix speech cors issue after kaz open 5000
 
 # nginx setup:
 * modify nginx files under `/etc/nginx/sites-available`
@@ -14,5 +13,6 @@ Search without speech input
 * git tracked baseline under `/var/www/html/simple-MDL`
 
 # docker setup
-* reason why using docker: to avoid cors problem
+* reason why using docker: to avoid cors problem (seems not working...)
 * `docker run -d -p 5001:5001 --network host vincentlu073/simple-mdl`
+
