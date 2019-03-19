@@ -232,6 +232,7 @@
         }.bind(this), 55000);
       },
       stopRecording() {
+	console.log(this.form.name)
         console.log("Stop recording!");
         //console.log("sh")
         this.btnStop = false;
@@ -241,18 +242,30 @@
         scriptNode.disconnect(audioContext.destination);
         ssStream.end();
         socket.emit('STOP_SPEECH', {});
+	console.log(this.form.name)
+	// send to flask here for speech to result (regex) way
+	const query = {'query':this.form.name}
+	const path = 'http://3.86.172.253:5001/speech_regex';
+        // Axios
+	//console.log(this.form.name)
+        axios.post(path, query)
+          .then((res)=>{
+            console.log(res);
+	    this.form.name = res.data.res_query;
+           })
+          .catch((error) => {
+            console.error(error);
+           });
+
       },
       errorCallback(error) {
         // console.log('errorCallback:', error);
       },
       redirectError(){
         this.noError = true;
-        this.$router.go(0);
-	// window.location.href = "http://simple.unc.edu/test" || "http://3.86.172.253:8080/test";
+        // refresh page
+	this.$router.go(0);
       },
-      // reloadPage(){
-      //   this.reload();
-      // },
     },
 
     created() {
@@ -271,9 +284,6 @@
         
            // that.textResult = text;
            that.form.name = text;
-           // console.log("text:")
-           // console.log("2")
-           // // console.log(text)
          }
        })
          if (navigator.mediaDevices.getUserMedia) {

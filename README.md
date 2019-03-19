@@ -2,9 +2,11 @@
 Search without speech input
 
 # Status
-* Deployed on ip; waiting for mapping to subdomain of simple.unc.edu
+* Deployed on simple.unc.edu
 
 ## todo
+* __write a paragraph about evaluation of baseline (link to the corpus (or solr search) in order to evaluate)__
+* mapping keywords and produce results from speech (eg. mapping from 'question mark' to '?'). plan to do on flask
 * fix speech cors issue on port5002 (currently using v2 speech api)
 * build https safe connection so that everywhere can connect
 
