@@ -75,7 +75,7 @@
   import qs from 'qs';
   var audioContext = new(window.AudioContext || window.webkitAudioContext)();
   //var socket = io.connect('http://3.86.172.253:5002');
-  var socket = io.connect('http://167.99.3.111:5002');
+  var socket = io.connect('http://167.99.3.111:5002', {secure: true});
   var ssStream = ss.createStream();
   var scriptNode;
   
@@ -247,7 +247,8 @@
       },
       redirectError(){
         this.noError = true;
-        window.location.href = "http://3.86.172.253:8080/test";
+        this.$router.go(0);
+	// window.location.href = "http://simple.unc.edu/test" || "http://3.86.172.253:8080/test";
       },
       // reloadPage(){
       //   this.reload();
