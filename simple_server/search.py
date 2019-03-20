@@ -38,12 +38,12 @@ def search(command, test=False):
         num_rows = inp_json["piece"]
     except:
         # if not specified last x piece, return all results
-        num_rows = 10000
+        num_rows = 50000
 
     try:
         date = inp_json["time"]
         if "all" in date:
-            num_rows = 10000
+            num_rows = 50000
             date = "date:*"
 
         else:
@@ -61,7 +61,7 @@ def search(command, test=False):
                 num *= 365
                 date = "date:[2002-03-07T00:00:00Z-{:d}DAY TO NOW]".format(num)
             else:
-                num = 10000
+                num = 50000
                 # print("Cannot recognize time; output all filtered data")
     except:
         date = "date:*"
