@@ -53,16 +53,14 @@ def search(command, test=False):
                 num = 1
 
             if "day" in inp_json["time"].lower():
-                date = "date:[2002-03-07T00:00:00Z-{:d}DAY TO NOW]".format(num)
+                pass
             elif "month" in inp_json["time"].lower():
                 num *= 30
-                date = "date:[2002-03-07T00:00:00Z-{:d}DAY TO NOW]".format(num)
             elif "year" in inp_json["time"].lower():
                 num *= 365
-                date = "date:[2002-03-07T00:00:00Z-{:d}DAY TO NOW]".format(num)
             else:
                 num = 50000
-                # print("Cannot recognize time; output all filtered data")
+            date = "date:[2004-02-04T00:00:00Z-{:d}DAY TO NOW]".format(num)
     except:
         date = "date:*"
 

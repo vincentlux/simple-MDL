@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 
 # enable CORS
-CORS(app)
+CORS(app, supports_credentials=True)
 
 
 class InvalidUsage(Exception):
@@ -42,7 +42,7 @@ def handle_invalid_usage(error):
 
 
 @app.route('/simple', methods=['GET', 'POST'])
-@cross_origin(origin='*')
+@cross_origin(origin='http://localhost:8080')
 def simple():
     response_object = {'status': 'success'}
     if request.method == 'POST':
@@ -69,6 +69,21 @@ def simple():
         # print(response_object)
         # print(res["response"]["docs"])
     return jsonify(response_object)
+
+#@app.after_request
+#def af_request(resp):     
+#    """
+#    :param resp:
+#    :return:
+#    """
+#    resp.headers['Access-Control-Allow-Origin'] = '*'
+#    resp.headers['Access-Control-Allow-Methods'] = 'GET,POST'
+#    resp.headers['Access-Control-Allow-Headers'] = 'x-requested-with,content-type'
+#    return resp
+
+
+
+
 
 # regex for speech to result
 @app.route('/speech_regex', methods=['GET','POST'])
