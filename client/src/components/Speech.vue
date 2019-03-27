@@ -117,23 +117,14 @@
       // Axios
       axios.post(path, query)
         .then((res)=>{
-            // console.log(res);
             this.time = res.data.QTime / 1000;
-            // console.log(this.time);
             this.num = Object.keys(res.data.docs).length;
-            // console.log(this.num);
             this.resObj = res.data.docs;
-            // console.log(this.resObj);
-            // console.log(this.num);
             this.isResult = true;
             this.noError = true;
         })
         .catch((error) => {
-          // eslint-disable-next-line
-          // console.error(error);
-          // console.log(error.response.data.message)
           this.errMsg =  error.response.data.message
-          // console.log("Error handling here");
           this.noError = false;
         });
 
@@ -141,16 +132,13 @@
 
       onSubmit (evt) {
         evt.preventDefault();
-      //   alert(JSON.stringify(this.form));
         
         const query = {query:this.form.name};
-        // console.log(query);
         this.fetchResult(query);
       },
 
       filter (_resObj) {
         if (this.isResult&this.noError){
-          // return _resObj
           return Object.values(_resObj).slice((this.currentPage-1)*10, (this.currentPage-1)*10+10);
           
         }
