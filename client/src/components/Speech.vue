@@ -1,7 +1,8 @@
 <template>
   <div class="header">
     <h1 class="cover-heading ">Simple Search</h1>
-      <b-form @submit="onSubmit">
+    <a href="https://github.com/vincentlux/simple-MDL/wiki" target="_blank">MDL grammar</a>  
+    <b-form @submit="onSubmit">
         <b-form-group id="Inp1"
                     label-sr-only
                     label-for="Inp1">
