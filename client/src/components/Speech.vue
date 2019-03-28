@@ -25,7 +25,7 @@
       Fetched  {{ this.num }} email(s) by {{ this.time }} s.
     </b-card>
     <b-card class="text-center" v-show="!noError">
-      {{ this.errMsg }} Please refer to  <a href="https://github.com/vincentlux/Cymantix/wiki">Project Wiki Page</a>
+      {{ this.errMsg }} Please refer to  <a href="https://github.com/vincentlux/simple-MDL/wiki">Project Wiki Page</a>
     </b-card>
   
 
