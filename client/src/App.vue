@@ -5,7 +5,7 @@
        <!-- <v-app id="app" standalone>
         <v-toolbar fixed>
              <v-container>
-            <v-toolbar-title class="orange--text text-xs-center">JARIS</v-toolbar-title>
+            <v-toolbar-title class="orange--text text-xs-center">testtest</v-toolbar-title>
             </v-container>
         </v-toolbar>
         <main>

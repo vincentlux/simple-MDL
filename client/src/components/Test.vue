@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <h1 class="cover-heading ">Simple Search</h1>
+    <h1 class="cover-heading ">Simple Search (test)</h1>
       <b-form @submit="onSubmit">
         <b-form-group id="Inp1"
                     label-sr-only
@@ -14,8 +14,8 @@
       </b-form-group>
       <b-button class = "button" type="submit" variant="warning">Submit</b-button>
       
-      <!-- <b-button class = "button" variant="primary" v-show="btn && !btnReset" v-on:click="startRecording">Start Recording</b-button>
-      <b-button class = "button" variant="danger" v-show="btnStop" v-on:click="stopRecording">Stop</b-button> -->
+      <b-button class = "button" variant="primary" v-show="btn && !btnReset" v-on:click="startRecording">Start Recording</b-button>
+      <b-button class = "button" variant="danger" v-show="btnStop" v-on:click="stopRecording">Stop</b-button>
       <b-button class = "button" variant="danger" v-show="btnReset" v-on:click="redirectError">Reset</b-button>
     </b-form>
 
@@ -73,10 +73,11 @@
 
   import axios from 'axios';
   import qs from 'qs';
-  // var audioContext = new(window.AudioContext || window.webkitAudioContext)();
-  // var socket = io.connect('http://localhost:5000');
-  // var ssStream = ss.createStream();
-  // var scriptNode;
+  var audioContext = new(window.AudioContext || window.webkitAudioContext)();
+  //var socket = io.connect('http://3.86.172.253:5002');
+  var socket = io.connect('http://167.99.3.111:5002', {secure: true});
+  var ssStream = ss.createStream();
+  var scriptNode;
   
   export default {
     // inject: ['reload'],
@@ -117,14 +118,23 @@
       // Axios
       axios.post(path, query)
         .then((res)=>{
+            // console.log(res);
             this.time = res.data.QTime / 1000;
+            // console.log(this.time);
             this.num = Object.keys(res.data.docs).length;
+            // console.log(this.num);
             this.resObj = res.data.docs;
+            // console.log(this.resObj);
+            // console.log(this.num);
             this.isResult = true;
             this.noError = true;
         })
         .catch((error) => {
+          // eslint-disable-next-line
+          // console.error(error);
+          // console.log(error.response.data.message)
           this.errMsg =  error.response.data.message
+          // console.log("Error handling here");
           this.noError = false;
         });
 
@@ -132,13 +142,16 @@
 
       onSubmit (evt) {
         evt.preventDefault();
+      //   alert(JSON.stringify(this.form));
         
         const query = {query:this.form.name};
+        // console.log(query);
         this.fetchResult(query);
       },
 
       filter (_resObj) {
         if (this.isResult&this.noError){
+          // return _resObj
           return Object.values(_resObj).slice((this.currentPage-1)*10, (this.currentPage-1)*10+10);
           
         }
@@ -219,6 +232,7 @@
         }.bind(this), 55000);
       },
       stopRecording() {
+	console.log(this.form.name)
         console.log("Stop recording!");
         //console.log("sh")
         this.btnStop = false;
@@ -228,54 +242,64 @@
         scriptNode.disconnect(audioContext.destination);
         ssStream.end();
         socket.emit('STOP_SPEECH', {});
+	console.log(this.form.name)
+	// send to flask here for speech to result (regex) way
+	const query = {'query':this.form.name}
+	const path = 'http://3.86.172.253:5001/speech_regex';
+        // Axios
+	//console.log(this.form.name)
+        axios.post(path, query)
+          .then((res)=>{
+            console.log(res);
+	    this.form.name = res.data.res_query;
+           })
+          .catch((error) => {
+            console.error(error);
+           });
+
       },
       errorCallback(error) {
         // console.log('errorCallback:', error);
       },
       redirectError(){
         this.noError = true;
-        window.location.href = "http://localhost:8080/";
+        // refresh page
+	this.$router.go(0);
       },
-      // reloadPage(){
-      //   this.reload();
-      // },
     },
 
-    // created() {
-    //   const that = this;
-    //   // console.log(audioContext) 
-    //   // console.log("created")
-    //   // console.log(that.result, that.btn, that.btnStop);
-    //   socket.on('SPEECH_RESULTS', function(text) {
-    //     // console.log(text)
-    //     if('q' == text){
+    created() {
+       const that = this;
+       // console.log(audioContext) 
+       // console.log("created")
+       // console.log(that.result, that.btn, that.btnStop);
+       socket.on('SPEECH_RESULTS', function(text) {
+         // console.log(text)
+         if('q' == text){
 
-    //       that.resultError = true;
-    //       console.log("error")
-    //     }else{
-    //       // console.log(text)
+           that.resultError = true;
+           console.log("error")
+         }else{
+           // console.log(text)
         
-    //       // that.textResult = text;
-    //       that.form.name = text;
-    //       // console.log("text:")
-    //       // console.log("2")
-    //       // // console.log(text)
-    //     }
-    //   })
-    //     if (navigator.mediaDevices.getUserMedia) {
-    //       // console.log('getUserMedia supported...');
-    //       navigator.webkitGetUserMedia({ audio: true }, function(stream) {
-    //         // console.log("stream?");
-    //         // // console.log(stream);
-    //         that.successCallback(stream)
-    //       }, function(error) {
-    //         // console.log("error2")
-    //         that.errorCallback(error)
-    //       });
-    //     } else {
-    //       // console.log('getUserMedia not supported on your browser!');
-    //     }
-    //   },
+           // that.textResult = text;
+           that.form.name = text;
+         }
+       })
+         if (navigator.mediaDevices.getUserMedia) {
+           // console.log('getUserMedia supported...');
+           navigator.webkitGetUserMedia({ audio: true }, function(stream) {
+             // console.log("stream?");
+             // // console.log(stream);
+             that.successCallback(stream)
+           }, function(error) {
+             // console.log("error2")
+             that.errorCallback(error)
+           });
+         } else {
+           // console.log('getUserMedia not supported on your browser!');
+         }
+       },
 
 
     }

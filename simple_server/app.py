@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 
 # enable CORS
-CORS(app)
+CORS(app, supports_credentials=True)
 
 
 class InvalidUsage(Exception):
@@ -41,12 +41,8 @@ def handle_invalid_usage(error):
     return response
 
 
-
-
-
-
 @app.route('/simple', methods=['GET', 'POST'])
-@cross_origin(origin='*')
+@cross_origin(origin='http://localhost:8080')
 def simple():
     response_object = {'status': 'success'}
     if request.method == 'POST':
@@ -74,7 +70,53 @@ def simple():
         # print(res["response"]["docs"])
     return jsonify(response_object)
 
-# sanity check route
+#@app.after_request
+#def af_request(resp):     
+#    """
+#    :param resp:
+#    :return:
+#    """
+#    resp.headers['Access-Control-Allow-Origin'] = '*'
+#    resp.headers['Access-Control-Allow-Methods'] = 'GET,POST'
+#    resp.headers['Access-Control-Allow-Headers'] = 'x-requested-with,content-type'
+#    return resp
+
+
+
+
+
+# regex for speech to result
+@app.route('/speech_regex', methods=['GET','POST'])
+def speech_regex():
+    response_object = {'status': 'success'}
+    if request.method == 'POST':
+        post_data = request.get_json()
+        print(post_data)
+        raw_query = post_data["query"]
+        response_object['raw_query'] = raw_query
+        # v1
+        # judge if the raw query is the keyboard input or speech input
+        print(response_object['raw_query'])
+        if not raw_query.startswith('?'):
+            response_object['res_query'] = raw_query
+            print("This should not be the case")
+            return jsonify(response_object)
+        else:
+            # regex to convert keyword ('question mark', 'quote') into ('?','"')
+            raw_query = raw_query.lower()
+            res_query = raw_query.replace("quotes ", "'") \
+                                .replace("quotes", "'") \
+                                .replace("quote ", "'") \
+                                .replace("quote", "'") \
+                                .replace("on", "ON") \
+                                .replace("email", "EMAIL")
+                                
+
+            response_object['res_query'] = res_query
+            return jsonify(response_object)
+
+
+# connction check route
 @app.route('/ping', methods=['GET'])
 @cross_origin(origin='*')
 def ping_pong():
@@ -86,6 +128,7 @@ def err_hinting(err_in, no_ques_mark=False):
     else:
         err = re.sub("[\(\[].*?[\)\]]", "", str(err_in))
         return err
+
 
 
 if __name__ == '__main__':
