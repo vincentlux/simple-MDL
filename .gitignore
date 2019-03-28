@@ -3,3 +3,6 @@ simple-MDL-1e031a0a41da.json
 __pycache__/
 .vscode/
 dist/
+
+# test
+alexa-skills/
