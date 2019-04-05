@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <h1 class="cover-heading ">Simple Search</h1>
-    <a href="https://github.com/vincentlux/simple-MDL/wiki" target="_blank">MDL grammar</a>  
+    <b-button variant="link" v-on:click="mdlGrammar">MDL Grammar</b-button>
     <b-form @submit="onSubmit">
         <b-form-group id="Inp1"
                     label-sr-only
@@ -237,11 +237,15 @@
         this.noError = true;
         window.location.href = "http://localhost:8080/";
       },
+      mdlGrammar(){
+	var url = "https://simple.unc.edu/documentation/";
+	window.open(url, '_blank', 'x=y');
+      },
       // reloadPage(){
       //   this.reload();
       // },
     },
-
+      
     // created() {
     //   const that = this;
     //   // console.log(audioContext) 
