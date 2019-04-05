@@ -13,7 +13,9 @@
                       placeholder="Type here and press Enter">
         </b-form-input>
       </b-form-group>
-      <b-button class = "button" type="submit" variant="warning">Submit</b-button>
+      <b-button class = "button" type="submit" variant="warning">
+	      <b-spinner small type="grow" v-show="!firstLoad&!isResult&noError"></b-spinner>
+	      Submit</b-button>
       
       <!-- <b-button class = "button" variant="primary" v-show="btn && !btnReset" v-on:click="startRecording">Start Recording</b-button>
       <b-button class = "button" variant="danger" v-show="btnStop" v-on:click="stopRecording">Stop</b-button> -->
@@ -105,7 +107,7 @@
         isResult:false,
         noError:true,
         errMsg: '',
-        // show: true
+        firstLoad: true,
         currentPage:1,
       }
     },
@@ -135,6 +137,8 @@
         evt.preventDefault();
         
         const query = {query:this.form.name};
+	this.firstLoad = false;
+	this.isResult = false;
         this.fetchResult(query);
       },
 
