@@ -140,7 +140,7 @@
 
       filter (_resObj) {
         if (this.isResult&this.noError){
-          return Object.values(_resObj).slice((this.currentPage-1)*10, (this.currentPage-1)*10+10);
+          return Object.values(_resObj).slice((this.currentPage-1)*5, (this.currentPage-1)*5+5);
           
         }
       },
