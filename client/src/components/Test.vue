@@ -7,14 +7,14 @@
                     label-for="Inp1">
         <b-form-input id="Inp2"
                       type="text"
-                      v-model="form.name"
+                      v-model="form.speechInp"
                       required
                       placeholder="Type here and press Enter">
         </b-form-input>
       </b-form-group>
       <b-button class = "button" type="submit" variant="warning">Submit</b-button>
       
-      <b-button class = "button" variant="primary" v-show="btn && !btnReset" v-on:click="startRecording">Start Recording</b-button>
+      <b-button v-b-modal.modal-speech class = "button" variant="primary" v-show="btn && !btnReset" v-on:click="startRecording">Start Recording</b-button>
       <b-button class = "button" variant="danger" v-show="btnStop" v-on:click="stopRecording">Stop</b-button>
       <b-button class = "button" variant="danger" v-show="btnReset" v-on:click="redirectError">Reset</b-button>
     </b-form>
@@ -63,7 +63,29 @@
   </div>
   <b-pagination v-show="isResult&noError" align="center" :total-rows="0 || parseInt(this.num)" v-model="currentPage" :per-page="10">
   </b-pagination>
+  
+  <!-- Modal Component -->
+  <b-modal
+    id="modal-speech"
+    ref="modal"
+    size="sm"
+    title="Please start speaking"
+    centered
+    no-close-on-backdrop
+    no-close-on-esc
+    hide-header-close
+    ok-title="stop"
+    cancel-title="reset"
+    @ok="handleOk"
+    @cancel="handleCancel"
+    @shown="clearSpeechInp"
     
+  >
+    <form @submit.stop.prevent="handleSubmit">
+      <!-- <b-form-input v-model="speechInp" placeholder="speech test"></b-form-input> -->
+      <b-form-input v-model="form.name" placeholder="e.g. on quote soccer"></b-form-input>
+    </form>
+  </b-modal>
 
   </div>
 
@@ -97,6 +119,7 @@
         ],
         form: {
         name: '',
+        speechInp: '',
         },
         time:'',
         num:'',
@@ -110,7 +133,6 @@
       }
     },
     methods: {
-
       fetchResult(query){
       // console.log(JSON.stringify(query));
       //const path = 'http://167.99.3.111:5001/simple';
@@ -124,40 +146,57 @@
             this.num = Object.keys(res.data.docs).length;
             // console.log(this.num);
             this.resObj = res.data.docs;
-            // console.log(this.resObj);
-            // console.log(this.num);
             this.isResult = true;
             this.noError = true;
         })
         .catch((error) => {
-          // eslint-disable-next-line
-          // console.error(error);
-          // console.log(error.response.data.message)
           this.errMsg =  error.response.data.message
-          // console.log("Error handling here");
           this.noError = false;
         });
+    },
 
+    clearSpeechInp() {
+        this.form.name = ''
+    },
+    handleOk(bvModalEvt) {
+      // Prevent modal from closing
+      bvModalEvt.preventDefault()
+      if (!this.form.name) { // should modify this part for a validity check
+        alert('speech input does not match with mdl grammar')
+      } else {
+        this.handleSubmit()
+      }
+    },
+    handleCancel(bvModalEvt) {
+      // reset?
+      this.redirectError()
+    },
+    handleSubmit() { // stop recording here
+      console.log(this.form.name)
+      // return result to the main text box
+      this.form.speechInp = this.form.name 
+      this.clearSpeechInp()
+      this.$nextTick(() => {
+        // Wrapped in $nextTick to ensure DOM is rendered before closing
+        this.$refs.modal.hide()
+      })
+      this.stopRecording()
     },
 
       onSubmit (evt) {
         evt.preventDefault();
-      //   alert(JSON.stringify(this.form));
         
-        const query = {query:this.form.name};
-        // console.log(query);
+        const query = {query:this.form.speechInp};
+        console.log(query)
         this.fetchResult(query);
       },
 
       filter (_resObj) {
         if (this.isResult&this.noError){
-          // return _resObj
           return Object.values(_resObj).slice((this.currentPage-1)*10, (this.currentPage-1)*10+10);
           
         }
       },
-
-
       successCallback(stream) {
         const vm = this;
         console.log('successCallback:...IN');
@@ -232,9 +271,8 @@
         }.bind(this), 55000);
       },
       stopRecording() {
-	console.log(this.form.name)
+	      console.log(this.form.speechInp)
         console.log("Stop recording!");
-        //console.log("sh")
         this.btnStop = false;
         this.btn = true;
         this.btnReset = true;
@@ -242,16 +280,15 @@
         scriptNode.disconnect(audioContext.destination);
         ssStream.end();
         socket.emit('STOP_SPEECH', {});
-	console.log(this.form.name)
+  console.log(this.form.speechInp)
 	// send to flask here for speech to result (regex) way
-	const query = {'query':this.form.name}
+  const query = {'query':this.form.speechInp}
+  console.log(query)
 	const path = 'http://3.86.172.253:5001/speech_regex';
-        // Axios
-	//console.log(this.form.name)
         axios.post(path, query)
           .then((res)=>{
             console.log(res);
-	    this.form.name = res.data.res_query;
+	          this.form.speechInp = res.data.res_query;
            })
           .catch((error) => {
             console.error(error);
