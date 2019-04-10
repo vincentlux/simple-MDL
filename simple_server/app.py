@@ -1,6 +1,7 @@
 import uuid, re
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
+from post_processing import str_to_mdl
 import search as s
 
 
@@ -92,28 +93,12 @@ def speech_regex():
     if request.method == 'POST':
         post_data = request.get_json()
         print(post_data)
-        raw_query = post_data["query"]
+        raw_query = post_data['query']
         response_object['raw_query'] = raw_query
-        # v1
-        # judge if the raw query is the keyboard input or speech input
         print(response_object['raw_query'])
-        if not raw_query.startswith('?'):
-            response_object['res_query'] = raw_query
-            print("This should not be the case")
-            return jsonify(response_object)
-        else:
-            # regex to convert keyword ('question mark', 'quote') into ('?','"')
-            raw_query = raw_query.lower()
-            res_query = raw_query.replace("quotes ", "'") \
-                                .replace("quotes", "'") \
-                                .replace("quote ", "'") \
-                                .replace("quote", "'") \
-                                .replace("on", "ON") \
-                                .replace("email", "EMAIL")
-                                
-
-            response_object['res_query'] = res_query
-            return jsonify(response_object)
+        # convert string to mdl query
+        response_object['res_query'] = str_to_mdl(raw_query)
+        return jsonify(response_object)
 
 
 # connction check route
