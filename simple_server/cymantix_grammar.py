@@ -82,13 +82,13 @@ example command:
 ?ON 'haha' 
 ?'Mike' ON 'Soccer' MSWORD LAST
 ?'mike' 
-?'Mike' EMAIL last 1
+?'Mike' EMAIL LAST 1
 ?'Mike' 'Drake' 'Jim'
 ?LAST
 ?LAST 1 
-?LAST 1 month EMAIL from 'Drake'
-?LAST EMAIL from 'Drake' 'Jim'
-?LAST 1 EMAIL from 'Drake'
+?LAST 1 month EMAIL 'Drake'
+?LAST EMAIL 'Drake' 'Jim'
+?LAST 1 EMAIL 'Drake'
 ?TOTAL
 """
 
