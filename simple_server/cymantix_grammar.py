@@ -10,7 +10,7 @@ grammar = Grammar(
     """
     all             = space op space sc
     sc              = sc_EMAIL_from / sc_EMAIL_attach / sc_EMAIL_piece / space
-    sc_EMAIL_piece  = "EMAIL last" space op_LAST_piece
+    sc_EMAIL_piece  = "EMAIL LAST" space op_LAST_piece
     sc_EMAIL_from   = "EMAIL" space op_lit_name
     sc_EMAIL_attach = "EMAIL" space sc_attach
     sc_attach       = "MSWORD" / "PDF" / "GIF"
