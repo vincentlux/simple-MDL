@@ -27,11 +27,11 @@
       Fetched  {{ this.num }} email(s) by {{ this.time }} s.
     </b-card>
     <b-card class="text-center" v-show="!noError">
-      {{ this.errMsg }} Please refer to  <a href="https://github.com/vincentlux/simple-MDL/wiki">Project Wiki Page</a>
+      {{ this.errMsg }} Please refer to  <a href="https://simple.unc.edu/documentation/">Project Wiki Page</a>
     </b-card>
   
 
-  <b-pagination v-show="isResult&noError" :total-rows="0 || parseInt(this.num)" v-model="currentPage" :per-page="10">
+  <b-pagination v-show="isResult&noError&this.num!=0" :total-rows="0 || parseInt(this.num)" v-model="currentPage" :per-page="10">
   </b-pagination>
   <div class="searchResult" v-show="isResult&noError" transition="expand">
         <a v-for="elem in filter(resObj)" :key="elem.message_id">
@@ -64,7 +64,7 @@
     </b-card>
     </a>
   </div>
-  <b-pagination v-show="isResult&noError" align="center" :total-rows="0 || parseInt(this.num)" v-model="currentPage" :per-page="10">
+  <b-pagination v-show="isResult&noError&this.num!=0" :total-rows="0 || parseInt(this.num)" v-model="currentPage" :per-page="10">
   </b-pagination>
     
 
@@ -111,8 +111,18 @@
         currentPage:1,
       }
     },
+    watch: { // to reset param after an error happens
+      'form': {
+        handler: function(v) {
+          if (this.errMsg!= ''){
+            this.firstLoad = true;
+            this.noError = true;
+          }
+        },
+        deep: true
+      },
+    },
     methods: {
-
       fetchResult(query){
       // console.log(JSON.stringify(query));
       //const path = 'http://167.99.3.111:5001/simple';
@@ -137,8 +147,8 @@
         evt.preventDefault();
         
         const query = {query:this.form.name};
-	this.firstLoad = false;
-	this.isResult = false;
+        this.firstLoad = false;
+        this.isResult = false;
         this.fetchResult(query);
       },
 

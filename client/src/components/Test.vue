@@ -1,6 +1,7 @@
 <template>
   <div class="header">
     <h1 class="cover-heading ">Simple Search (test)</h1>
+    <b-button variant="link" v-on:click="mdlGrammar">MDL Grammar</b-button>
       <b-form @submit="onSubmit">
         <b-form-group id="Inp1"
                     label-sr-only
@@ -12,8 +13,11 @@
                       placeholder="Type here and press Enter">
         </b-form-input>
       </b-form-group>
-      <b-button class = "button" type="submit" variant="warning">Submit</b-button>
-      
+      <!-- <b-button class = "button" type="submit" variant="warning">Submit</b-button> -->
+      <b-button class = "button" type="submit" variant="warning">
+	      <b-spinner small type="grow" v-show="!firstLoad&!isResult&noError"></b-spinner>
+	      Submit</b-button>
+
       <b-button v-b-modal.modal-speech class = "button" variant="primary" v-show="btn && !btnReset" v-on:click="startRecording">Start Recording</b-button>
       <b-button class = "button" variant="danger" v-show="btnStop" v-on:click="stopRecording">Stop</b-button>
       <b-button class = "button" variant="danger" v-show="btnReset" v-on:click="redirectError">Reset</b-button>
@@ -24,11 +28,11 @@
       Fetched  {{ this.num }} email(s) by {{ this.time }} s.
     </b-card>
     <b-card class="text-center" v-show="!noError">
-      {{ this.errMsg }} Please refer to  <a href="https://github.com/vincentlux/Cymantix/wiki">Project Wiki Page</a>
+      <b-button variant="warning link" v-on:click="mdlGrammar">{{ this.errMsg }}</b-button>
     </b-card>
   
 
-  <b-pagination v-show="isResult&noError" :total-rows="0 || parseInt(this.num)" v-model="currentPage" :per-page="10">
+  <b-pagination v-show="isResult&noError&this.num!=0" :total-rows="0 || parseInt(this.num)" v-model="currentPage" :per-page="5">
   </b-pagination>
   <div class="searchResult" v-show="isResult&noError" transition="expand">
         <a v-for="elem in filter(resObj)" :key="elem.message_id">
@@ -61,7 +65,7 @@
     </b-card>
     </a>
   </div>
-  <b-pagination v-show="isResult&noError" align="center" :total-rows="0 || parseInt(this.num)" v-model="currentPage" :per-page="10">
+  <b-pagination v-show="isResult&noError&this.num!=0" :total-rows="0 || parseInt(this.num)" v-model="currentPage" :per-page="5">
   </b-pagination>
   
   <!-- Modal Component -->
@@ -83,7 +87,7 @@
   >
     <form @submit.stop.prevent="handleSubmit">
       <!-- <b-form-input v-model="speechInp" placeholder="speech test"></b-form-input> -->
-      <b-form-input v-model="form.name" placeholder="e.g. on quote soccer"></b-form-input>
+      <b-form-input v-model="form.name" placeholder="e.g. on soccer"></b-form-input>
     </form>
   </b-modal>
 
@@ -128,9 +132,20 @@
         isResult:false,
         noError:true,
         errMsg: '',
-        // show: true
+        firstLoad: true,
         currentPage:1,
       }
+    },
+    watch: { // to reset param after an error happens
+      'form': {
+        handler: function(v) {
+          if (this.errMsg!= ''){
+            this.firstLoad = true;
+            this.noError = true;
+          }
+        },
+        deep: true
+      },
     },
     methods: {
       fetchResult(query){
@@ -140,17 +155,14 @@
       // Axios
       axios.post(path, query)
         .then((res)=>{
-            // console.log(res);
             this.time = res.data.QTime / 1000;
-            // console.log(this.time);
             this.num = Object.keys(res.data.docs).length;
-            // console.log(this.num);
             this.resObj = res.data.docs;
             this.isResult = true;
             this.noError = true;
         })
         .catch((error) => {
-          this.errMsg =  error.response.data.message
+          this.errMsg =  error.response.data.message;
           this.noError = false;
         });
     },
@@ -187,13 +199,14 @@
       evt.preventDefault();
       
       const query = {query:this.form.speechInp};
-      console.log(query)
+      this.firstLoad = false;
+      this.isResult = false;
       this.fetchResult(query);
     },
 
     filter (_resObj) {
       if (this.isResult&this.noError){
-        return Object.values(_resObj).slice((this.currentPage-1)*10, (this.currentPage-1)*10+10);
+        return Object.values(_resObj).slice((this.currentPage-1)*5, (this.currentPage-1)*5+5);
         
       }
     },
@@ -204,13 +217,11 @@
       // add user gesture
       console.log(audioContext.resume());
       var input = audioContext.createMediaStreamSource(stream);
-      //console.log(input)
       var bufferSize = 2048;
       scriptNode = audioContext.createScriptProcessor(bufferSize, 1, 1);
       scriptNode.onaudioprocess = scriptNodeProcess;
       input.connect(scriptNode);
 
-      // console.log('ScriptNode BufferSize:', scriptNode.bufferSize);
       function scriptNodeProcess(audioProcessingEvent) {
       var inputBuffer = audioProcessingEvent.inputBuffer;
       var outputBuffer = audioProcessingEvent.outputBuffer;
@@ -303,6 +314,10 @@
       // refresh page
       this.$router.go(0);
     },
+    mdlGrammar(){
+      var url = "https://simple.unc.edu/documentation/";
+      window.open(url, '_blank', 'x=y');
+      },
     },
 
     created() {
@@ -325,8 +340,6 @@
            // console.log('getUserMedia not supported on your browser!');
          }
        },
-
-
     }
 </script>
 
