@@ -1,12 +1,12 @@
-var app = require('express')();
-//var cors = require('cors')
-//app.use(cors())
+//var app = require('express')();
+////var cors = require('cors')
+////app.use(cors())
 
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
-server.listen(5002);
+//var server = require('http').Server(app);
+//var io = require('socket.io')(server);
+//server.listen(5002);
 
-
+const io = require('socket.io')(5002);
 
 
 
