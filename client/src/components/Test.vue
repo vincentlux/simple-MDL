@@ -151,7 +151,8 @@
       fetchResult(query){
       // console.log(JSON.stringify(query));
       //const path = 'http://167.99.3.111:5001/simple';
-      const path = 'http://3.86.172.253:5001/simple';
+      //const path = 'http://3.86.172.253:5001/simple';
+      const path = 'http://3.86.172.253/api/simple';
       // Axios
       axios.post(path, query)
         .then((res)=>{
@@ -295,8 +296,8 @@
       // send to flask here for speech to result (regex) way
       const query = {'query':this.form.speechInp}
       console.log(query)
-      const path = 'http://3.86.172.253:5001/speech_regex';
-      // const path = 'http://localhost:5001/speech_regex';
+      //const path = 'http://3.86.172.253:5001/speech_regex';
+      const path = 'http://3.86.172.253/api/speech_regex';
       axios.post(path, query)
         .then((res)=>{
           console.log(res);
