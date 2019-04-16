@@ -1,9 +1,12 @@
-# This branch used to implement pop up box and speech search feature (Test.vue)
+# This branch is used to fix https issue
 
-function:
-1. when clicking record, pop up a text box starting with `?`
-2. E.g. `?ON "soccer"` should be expressed as `ON quote soccer`
+done:
+* fixed /api implementation (5001 cors issue)
 
 todo
-* ~~modal~~
-* modification of second layer grammar
+* test with 5001 port close
+* use socket.io at aws and nginx config it
+* after all done, use https conf at /etc/nginx/sites-available/default-https.bak to make everything under https
+
+concern:
+For real ssl instead of self-signed one, a real domain name is needed instead of x.xx.xx.xx
