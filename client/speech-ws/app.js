@@ -7,7 +7,7 @@
 //server.listen(5002);
 
 const io = require('socket.io')(5002);
-
+//io.set('origins', 'http://3.86.172.253:*');
 
 
 
