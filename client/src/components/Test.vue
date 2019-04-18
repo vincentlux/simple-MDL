@@ -100,9 +100,9 @@
   import axios from 'axios';
   import qs from 'qs';
   var audioContext = new(window.AudioContext || window.webkitAudioContext)();
-  //var socket = io.connect('http://3.86.172.253/ws');
+  var socket = io.connect('http://3.86.172.253', {path: '/ws/'});
   //var socket = io.connect('http://3.86.172.253/ws', {secure: true});
-  var socket = io.connect('http://167.99.3.111:5002', {secure: true});
+  //var socket = io.connect('http://167.99.3.111:5002', {secure: true});
   var ssStream = ss.createStream();
   var scriptNode;
   
