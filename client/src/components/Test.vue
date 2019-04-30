@@ -154,7 +154,7 @@
       // console.log(JSON.stringify(query));
       //const path = 'http://167.99.3.111:5001/simple';
       //const path = 'http://3.86.172.253:5001/simple';
-      const path = 'http://3.86.172.253/api/simple';
+      const path = 'https://mdl.unc.edu/api/simple';
       // Axios
       axios.post(path, query)
         .then((res)=>{
@@ -299,7 +299,7 @@
       const query = {'query':this.form.speechInp}
       console.log(query)
       //const path = 'http://3.86.172.253:5001/speech_regex';
-      const path = 'http://3.86.172.253/api/speech_regex';
+      const path = 'https://mdl.unc.edu/api/speech_regex';
       axios.post(path, query)
         .then((res)=>{
           console.log(res);
