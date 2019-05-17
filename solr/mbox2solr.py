@@ -1,12 +1,18 @@
-import argparse
+import argparse, re, os
 import mailbox
-import re
 
 
 
 class mbox2solr:
-    def __init__(self):
+    def __init__(self, f_name, dir_in, dir_out):
         self.txt = ''
+        self.f_name = f_name
+        self.dir_in = dir_in
+        # create sep folder for different file
+        self.dir_out = os.path.join(dir_out,f_name.split('.')[0])
+        self.f_in = os.path.join(dir_in, f_name)
+        self.create_dir(self.dir_in)
+        self.create_dir(self.dir_out)
 
     def split(self, remove_trashcode=False):
         """convert mbox to separate txt files ready for xml indexing 
@@ -15,7 +21,7 @@ class mbox2solr:
         count = 0
         temp_doc = ''
         end = False
-        with open("./data/Mail/chunk_0_filtered.txt", 'r', encoding='ISO-8859-1') as f:
+        with open(self.f_in, 'r', encoding='ISO-8859-1') as f:
             line = f.readline() # first (must start with From )
             temp_doc += line 
             line = f.readline() 
@@ -25,21 +31,24 @@ class mbox2solr:
                     line = f.readline()
                     # only get Content-Type: text/plain
                     if remove_trashcode:
-                        if line.startswith('Content-Type: text'): # get content between two C-T
+                        if line.startswith('Content-Type: text/plain'): # get content between two C-T
                             temp_doc += line
                             line = f.readline()
                             while not line.startswith('Content-Type:'):
                                 temp_doc += line
                                 line = f.readline()
-                            break
-                
-
-                    # if eof, end
+                            # this doc ends, now to consume all trash from this doc
+                            while not line.startswith('From '):
+                                line = f.readline()
+                                if not line:
+                                    break
+                    # if EOF, end
                     if not line:
                         end = True
                         break
-                # save
-                with open('./data/txt/'+str(count)+'.txt', 'w') as ff:
+    
+                # print(count)
+                with open(os.path.join(self.dir_out, str(count)+'.txt'), 'w') as ff:
                     ff.write(temp_doc)
                 count += 1
                 temp_doc = ''
@@ -49,31 +58,13 @@ class mbox2solr:
                     print(count)
                     break
 
-                # if count == 3:
-                #     raise NotImplementedError
-
-            # for line in f:
-            #     if remove_trashcode:
-            #         if " " not in line and line != "\n" and len(line) > 15: # 15 is arbitrary
-            #             continue
-                
-            #     # start split
-            #     if line.startswith('From ') and count != 0:
-            #         while not f.next().startswith('From '):
-            #             temp_txt += next(line)??? 
-            #             next_line = next_line.next()
-                    
-            #         with open(str(count)+'.txt') as ff:
-            #             ff.write(temp_txt)
-            #         count += 1
-            #         temp_txt = ''
-                
-            #     if count == 3:
-            #         raise NotImplementedError
+    def txt2xml(self):
+        raise NotImplementedError
 
 
-        # with open("./Archived.txt", 'w') as wf:
-        #     wf.write(res)
-        #     print("finish")
+    def create_dir(self, dir_in):
+        if not os.path.exists(dir_in):
+            os.mkdir(dir_in)
+    
        
 
