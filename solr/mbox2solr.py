@@ -1,4 +1,4 @@
-import argparse, re, os
+import argparse, re, os, subprocess
 import mailbox
 from datetime import datetime
 from xml.sax.saxutils import escape
@@ -202,7 +202,15 @@ class mbox2solr:
             count += 1
         print(self.debug)
 
-    
+    def call_solr(self):
+        # in .sh: 
+        # 1. add new core
+        # 2. add field ?
+        # 3. indexing by designated xml dir
+
+
+        # output = subprocess.call(["./test.sh","xyz","1234"])
+        # print(output)
 
     def create_dir(self, dir_in):
         if not os.path.exists(dir_in):
