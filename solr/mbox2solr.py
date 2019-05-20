@@ -160,7 +160,7 @@ class mbox2solr:
                 except:
                     print(temp_dict.keys())
 
-                _date = self.f_date + temp_dict['Date'] + self.close
+                _date = self.f_date + temp_dict['Date'].strip() + self.close
                 _from = self.f_from + temp_dict['From'] + self.close
                 try: 
                     _to = self.f_to + temp_dict['To'] + self.close
