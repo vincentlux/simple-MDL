@@ -203,6 +203,7 @@ class mbox2solr:
         print(self.debug)
 
     def call_solr(self):
+        raise NotImplementedError
         # in .sh: 
         # 1. add new core
         # 2. add field ?
