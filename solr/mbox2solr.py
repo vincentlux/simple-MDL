@@ -63,7 +63,7 @@ class mbox2solr:
                                     if not line: # last one
                                         break
                             else:
-                                while not line.startswith('From'): #  and not(line.startswith('From ') and line[])
+                                while not line.startswith('From '): #  and not(line.startswith('From ') and line[])
                                     temp_doc += line
                                     line = f.readline()
                                     if not line: # last one
@@ -108,40 +108,20 @@ class mbox2solr:
             lines = [e+d for e in doc.split(d)]
             # start processing each file
             for line in lines[1:]:
-                if not line.startswith('Content-Type: text/plain') and not content:
+                if not line.lower().startswith('content-type: text/plain') and not content:
                     if ':' in line:
                         if line.startswith('Date:') and not date:
-                            try:
-                                date = True
-                                split_line = line.strip().split(':', 1)
-                                # strip time zone and format time
-                                split_line[1] = split_line[1].strip()
-                                split_line[1] = datetime.strptime(split_line[1], '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%dT%H:%M:%SZ')
-                                
-                            except ValueError:
-                                try: # may contain (UTC) at the end
-                                    split_line[1] = datetime.strptime(split_line[1][:-6].strip(), '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%dT%H:%M:%SZ')
-                                except ValueError:
-                                    try: # may be Sat, 28 May 2016 12:25:12 EDT
-                                        split_line[1] = datetime.strptime(split_line[1][:-4].strip(), '%a, %d %b %Y %H:%M:%S').strftime('%Y-%m-%dT%H:%M:%SZ')
-                                    except ValueError: # may be '3 Apr 2015 08:42:29 -0400'
-                                        split_line[1] = datetime.strptime(split_line[1], '%d %b %Y %H:%M:%S %z').strftime('%Y-%m-%dT%H:%M:%SZ')
-                                except Exception as e:
-                                    print('error time!',e)
-                                    print(line)
-                                    break
-
-                            finally:
-                                split_line[1] = self.xmlescape(split_line[1].strip())
-                                    
+                            split_line, date = self.process_date(line, date)        
                         else:
                             # if line.startswith("Date:"): # this is probably not possible because not yet to the content
+                            #     print(count)
                             #     split_line[1] += self.xmlescape(line.strip())
                             split_line = line.strip().split(":", 1)
                             split_line[1] = self.xmlescape(split_line[1].strip())
                     else:
                         split_line[1] += self.xmlescape(re.sub(r"[\s+]", ' ', line))
                     temp_dict[split_line[0]] = split_line[1]
+
                 else:
                     content = True
                     try:
@@ -149,13 +129,17 @@ class mbox2solr:
                         if (line.startswith('Message-Id') and 'Message-Id' not in temp_dict.keys()) \
                             or (line.startswith('Message-ID') and 'Message-ID' not in temp_dict.keys()) \
                             or (line.startswith('Message-id') and 'Message-id' not in temp_dict.keys()) \
-                            or (line.startswith('Date') and 'Date' not in temp_dict.keys()) \
                             or (line.startswith('Subject') and 'Subject' not in temp_dict.keys()) \
                             or (line.startswith('From') and 'From' not in temp_dict.keys()) \
                             or (line.startswith('To') and 'To' not in temp_dict.keys()):
                             split_line = line.strip().split(":", 1)
                             split_line[1] = self.xmlescape(split_line[1].strip())
                             temp_dict[split_line[0]] = split_line[1]
+                        elif line.startswith('Date') and 'Date' not in temp_dict.keys():
+                            split_line, _ = self.process_date(line, date)
+                            split_line[1] = self.xmlescape(split_line[1].strip())
+                            temp_dict[split_line[0]] = split_line[1]
+
 
                         else:
                             temp_dict['content'] += self.xmlescape(line)
@@ -222,5 +206,30 @@ class mbox2solr:
             "'": "&apos;",
             "\"": "&quot;"
         })
+    
+    def process_date(self, line, date):
+        try:
+            date = True
+            split_line = line.strip().split(':', 1)
+            # strip time zone and format time
+            split_line[1] = split_line[1].strip()
+            split_line[1] = datetime.strptime(split_line[1], '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%dT%H:%M:%SZ')
+            
+        except ValueError:
+            try: # may contain (UTC) at the end
+                split_line[1] = datetime.strptime(split_line[1][:-6].strip(), '%a, %d %b %Y %H:%M:%S %z').strftime('%Y-%m-%dT%H:%M:%SZ')
+            except ValueError:
+                try: # may be Sat, 28 May 2016 12:25:12 EDT
+                    split_line[1] = datetime.strptime(split_line[1][:-4].strip(), '%a, %d %b %Y %H:%M:%S').strftime('%Y-%m-%dT%H:%M:%SZ')
+                except ValueError: # may be '3 Apr 2015 08:42:29 -0400'
+                    split_line[1] = datetime.strptime(split_line[1], '%d %b %Y %H:%M:%S %z').strftime('%Y-%m-%dT%H:%M:%SZ')
+            except Exception as e:
+                print('error time!',e)
+                print(line)
+
+        finally:
+            split_line[1] = self.xmlescape(split_line[1].strip())
+        
+        return split_line, date
     
        
