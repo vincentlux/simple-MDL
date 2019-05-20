@@ -2,7 +2,7 @@
 
 corename=$1
 xmldir=$2
-# sudo su - solr -c "/opt/solr/bin/solr create -c "$corename""
+sudo su - solr -c "/opt/solr/bin/solr create -c "$corename""
 
 # add field
 curl -X POST -H 'Content-type:application/xml' --data-binary '{

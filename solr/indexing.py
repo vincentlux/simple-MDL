@@ -7,6 +7,7 @@ if __name__ == '__main__':
     m2s.txt2xml()
     print('finish xml conversion')
     print('start indexing')
-    raise NotImplementedError
-    m2s.call_solr()
+    # raise NotImplementedError
+    m2s.call_solr('test2', 'chunk_0_filtered')
+
     

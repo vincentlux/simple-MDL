@@ -186,7 +186,11 @@ class mbox2solr:
             count += 1
         print(self.debug)
 
-    def call_solr(self):
+    def call_solr(self, corename, dirname):
+        command = 'bash solr.sh ' + corename + ' ' + dirname
+        password = os.environ.get('sudopass')
+        p = os.system('echo %s|sudo -S %s' % (password, command))
+        print(p)
         raise NotImplementedError
         # in .sh: 
         # 1. add new core
