@@ -13,6 +13,7 @@
                       placeholder="Type here and press Enter">
         </b-form-input>
       </b-form-group>
+      <Upload></Upload>
       <b-button class = "button" type="submit" variant="warning">
 	      <b-spinner small type="grow" v-show="!firstLoad&!isResult&noError"></b-spinner>
 	      Submit</b-button>
@@ -76,6 +77,7 @@
 
   import axios from 'axios';
   import qs from 'qs';
+  import Upload from './Upload';
   // var audioContext = new(window.AudioContext || window.webkitAudioContext)();
   // var socket = io.connect('http://localhost:5000');
   // var ssStream = ss.createStream();
@@ -83,6 +85,9 @@
   
   export default {
     // inject: ['reload'],
+    components: {
+      Upload
+    },
     data() {
       return {
         btn: true,

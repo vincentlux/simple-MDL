@@ -1,6 +1,7 @@
-import uuid, re
+import uuid, re, os
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
+from werkzeug import secure_filename
 from post_processing import str_to_mdl
 import search as s
 
@@ -15,6 +16,8 @@ app.config.from_object(__name__)
 # enable CORS
 CORS(app, supports_credentials=True)
 
+# extension
+ALLOWED_EXTENSIONS = set(['txt', 'mbox'])
 
 class InvalidUsage(Exception):
     status_code = 400
@@ -71,20 +74,6 @@ def simple():
         # print(res["response"]["docs"])
     return jsonify(response_object)
 
-#@app.after_request
-#def af_request(resp):     
-#    """
-#    :param resp:
-#    :return:
-#    """
-#    resp.headers['Access-Control-Allow-Origin'] = '*'
-#    resp.headers['Access-Control-Allow-Methods'] = 'GET,POST'
-#    resp.headers['Access-Control-Allow-Headers'] = 'x-requested-with,content-type'
-#    return resp
-
-
-
-
 
 # regex for speech to result
 @app.route('/speech_regex', methods=['GET','POST'])
@@ -101,6 +90,18 @@ def speech_regex():
         return jsonify(response_object)
 
 
+@app.route('/upload_file', methods=['GET','POST'])
+def upload_file():
+   if request.method == 'POST':
+      f = request.files['file']
+      if f and allowed_file(f.filename):
+          f.save(os.path.join('../solr/data/Mail', secure_filename(f.filename)))
+          print(secure_filename(f.filename))
+          # next thing to do: pass filename to indexing.py then automating
+          return 'upload successfully'
+      else:
+          return 'only allow .txt or .mbox'
+
 # connction check route
 @app.route('/ping', methods=['GET'])
 @cross_origin(origin='*')
@@ -114,7 +115,9 @@ def err_hinting(err_in, no_ques_mark=False):
         err = re.sub("[\(\[].*?[\)\]]", "", str(err_in))
         return err
 
-
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)

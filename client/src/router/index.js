@@ -3,6 +3,7 @@ import Router from 'vue-router'
 // const Speech = () => import('@/components/Speech')
 import Speech from '@/components/Speech';
 import Test from '@/components/Test';
+import Upload from '@/components/Upload';
 
 Vue.use(Router)
 
@@ -18,6 +19,11 @@ export default new Router({
 			path: '/test',
 			name: 'Test',
 			component: Test
+		},
+		{
+			path: '/upload',
+			name: 'Upload',
+			component: Upload
 		}
   ]
 })

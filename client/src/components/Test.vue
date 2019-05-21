@@ -99,6 +99,7 @@
 
   import axios from 'axios';
   import qs from 'qs';
+  import Upload from './Upload';
   var audioContext = new(window.AudioContext || window.webkitAudioContext)();
   //var socket = io.connect('http://3.86.172.253', {path: '/ws/'});
   var socket = io.connect('wss://mdl.unc.edu', {path: '/ws/'});
@@ -109,6 +110,9 @@
   
   export default {
     // inject: ['reload'],
+    components: {
+      Upload
+    },
     data() {
       return {
         btn: true,
