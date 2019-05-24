@@ -13,7 +13,7 @@
                       placeholder="Type here and press Enter">
         </b-form-input>
       </b-form-group>
-      <Upload></Upload>
+      <!-- <Upload></Upload> -->
       <b-button class = "button" type="submit" variant="warning">
 	      <b-spinner small type="grow" v-show="!firstLoad&!isResult&noError"></b-spinner>
 	      Submit</b-button>
