@@ -4,17 +4,23 @@ import Router from 'vue-router'
 import Speech from '@/components/Speech';
 import Test from '@/components/Test';
 import Upload from '@/components/Upload';
+import Welcome from '@/components/Welcome';
 
 Vue.use(Router)
 
 export default new Router({
    mode: 'history',
   routes: [
-    {
+		{
       path: '/',
-      name: 'Speech',
-      component: Speech
+      name: 'Welcome',
+      component: Welcome
     },
+    // {
+    //   path: '/',
+    //   name: 'Speech',
+    //   component: Speech
+    // },
 		{
 			path: '/test',
 			name: 'Test',

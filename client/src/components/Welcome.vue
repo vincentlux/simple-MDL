@@ -1,48 +1,22 @@
 <template>
-  <div class="container">
-    <div class="large-12 medium-12 small-12 cell">
-      <label>File
-        <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
-      </label>
-        <button v-on:click="submitFile()">Submit</button>
-    </div>
+  <div class="header">
+    <h1 class="cover-heading ">Welcome to Simple MDL</h1>
+    <h4 style="margin-bottom: 1.5rem"> Search email with Minimal Dictionary Language</h4>
+    <Upload></Upload>
+    
   </div>
+
 </template>
 
 <script>
   import axios from 'axios';
+  import Upload from './Upload';
   export default {
-    data(){
-      return {
-        file: ''
-      }
+    components: {
+      Upload
     },
 
-    methods: {
-      submitFile(){
-          // initialize form data
-	  let formData = new FormData();
-          // Add the form data we need to submit
-          formData.append('file', this.file);
-          // make the request to the POST /single-file URL
-          axios.post( 'https://mdl.unc.edu/api/upload_file',
-              formData,
-              {
-              headers: {
-                  'Content-Type': 'multipart/form-data'
-              }
-            }
-          ).then(function(response){
-        console.log(response)
-      })
-      .catch(function(){
-        console.log('FAILURE!!');
-      });
-    },
-      handleFileUpload(){
-        this.file = this.$refs.file.files[0];
-      }
-    }
+
   }
 </script>
 

@@ -1,10 +1,24 @@
 <template>
   <div class="container">
     <div class="large-12 medium-12 small-12 cell">
-      <label>File
-        <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
-      </label>
-        <button v-on:click="submitFile()">Submit</button>
+        <!-- <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/> -->
+        <b-form-file
+          v-model="file"
+          :state="Boolean(file)"
+          placeholder="Choose an email Archive ..."
+          drop-placeholder="Drop file here..."
+        ></b-form-file>
+        <!-- <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div> -->
+
+        <!-- <button v-on:click="submitFile()">Submit</button> -->
+        <h4 style=" margin-bottom: 1.5rem"> </h4>
+        <b-progress :value="uploadPercentage" :max=100 :label="`{value}&#37;`" v-show="file" show-progress animated></b-progress>
+        <h4 style=" margin-bottom: 1.5rem"> </h4>
+        <b-button class = "button" variant="danger" v-show="file" v-on:click="submitFile">
+        <!-- <b-spinner small type="grow" v-show="!firstLoad&!uploaded"></b-spinner> -->
+          Upload</b-button>
+        <h4 style=" margin-bottom: 1.5rem" v-show="!file"> or</h4>
+        <b-button class = "button" variant="danger" v-show="!file" v-on:click="demo">Try with demo email archive</b-button>
     </div>
   </div>
 </template>
@@ -14,34 +28,51 @@
   export default {
     data(){
       return {
-        file: ''
+        file: '',
+        firstLoad: true,
+        uploaded: false,
+        noUploadError: true,
+        uploadErrMsg: '',
+        uploadPercentage: 0,
       }
     },
 
     methods: {
       submitFile(){
-          // initialize form data
-	  let formData = new FormData();
-          // Add the form data we need to submit
-          formData.append('file', this.file);
-          // make the request to the POST /single-file URL
-          axios.post( 'https://mdl.unc.edu/api/upload_file',
-              formData,
-              {
+        this.firstLoad = false;
+        // initialize form data
+        let formData = new FormData();
+        // Add the form data we need to submit
+        formData.append('file', this.file);
+        // make the request to the POST /single-file URL
+        axios.post( 'https://mdl.unc.edu/api/upload_file',
+            formData,
+            {
               headers: {
-                  'Content-Type': 'multipart/form-data'
-              }
+                'Content-Type': 'multipart/form-data'
+              },
+              onUploadProgress: function( progressEvent ) {
+                this.uploadPercentage = parseInt( Math.round( ( progressEvent.loaded * 100 ) / progressEvent.total ) );
+              }.bind(this)
             }
-          ).then(function(response){
-        console.log(response)
-      })
-      .catch(function(){
-        console.log('FAILURE!!');
-      });
-    },
+        ).then((res)=>{
+          this.UploadErrMsg = res.data;
+          console.log(this.uploadErrMsg);
+          this.uploaded = true;
+          console.log(this.uploaded)
+          this.demo();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      },  
       handleFileUpload(){
         this.file = this.$refs.file.files[0];
-      }
+      },
+      demo(){
+        this.$router.push({path: '/test'})
+        // window.location.href = "http://localhost:8080/test";
+      },
     }
   }
 </script>
