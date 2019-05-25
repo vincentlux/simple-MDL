@@ -4,7 +4,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 from werkzeug import secure_filename
 from post_processing import str_to_mdl
-import search
+from search import Search 
 from solr.indexing import indexing
 
 
@@ -20,6 +20,7 @@ CORS(app, supports_credentials=True)
 
 # extension
 ALLOWED_EXTENSIONS = set(['txt', 'mbox'])
+test_search = Search()
 
 class InvalidUsage(Exception):
     status_code = 400
@@ -56,7 +57,7 @@ def simple():
         # get SIMPLE query and call solr to get result
         query = post_data["query"]
         try:        
-            res = search.search(query)
+            res = test_search.search(query)
         except Exception as e:
             if '?' not in query:
                 raise InvalidUsage(e,True, status_code=404)
@@ -102,8 +103,12 @@ def upload_file():
           
           # next thing to do: pass filename to indexing.py then automating
           corename = indexing(filename=filename)
-          print(corename)
+          print(corename, 'start setSolr')
+          
+          test_search.setSolr(corename)
+
           return 'upload successfully'
+
       else:
           return 'only allow .txt or .mbox'
 

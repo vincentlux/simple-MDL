@@ -3,83 +3,96 @@ import requests
 import argparse
 import cymantix_grammar as cg
 
+class Search():
+    def __init__(self):
+        self.corename = 'demo'
+        
+    def setSolr(self, corename):    
+        self.corename = corename
+        print('set!', self.corename)
 
-
-def search(command, test=False):
-    # convert json to solr query
-    # get json file
-    inp_json = cg.c_json(command)
-    # define field
-    try:
-        # '&' for multiple person
-        inp_json["from"] = ' '.join(inp_json["from"].split())
-        inp_json["from"] = inp_json["from"].replace("' '", "&")
-        from_name = "from_name:"+inp_json["from"]
-    except:
-        from_name = "from_name:*"
-
-    try:
-        subject = "subject:"+inp_json["topic"]
-    except:
-        subject = "subject:*"
-
-    try:
-        content = "content:" + inp_json["attachment"]
-    except:
-        content = "content:*"
-
-    try:
-        if inp_json["total"]:
-            num_rows = 10000
-    except:
-        pass
-
-    try:
-        num_rows = inp_json["piece"]
-    except:
-        # if not specified last x piece, return all results
-        num_rows = 50000
-
-    try:
-        date = inp_json["time"]
-        if "all" in date:
-            num_rows = 50000
-            date = "date:*"
-
-        else:
-            try:
-                num = eval(''.join([n for n in inp_json["time"] if n.isdigit()]))
-            except:
-                num = 1
-
-            if "day" in inp_json["time"].lower():
-                pass
-            elif "month" in inp_json["time"].lower():
-                num *= 30
-            elif "year" in inp_json["time"].lower():
-                num *= 365
+    def search(self, command, test=False):
+        # convert json to solr query
+        # get json file
+        inp_json = cg.c_json(command)
+        # define field
+        try:
+            # '&' for multiple person
+            inp_json["from"] = ' '.join(inp_json["from"].split())
+            inp_json["from"] = inp_json["from"].replace("' '", "&")
+            if self.corename == 'demo':
+                from_name = "from_name:"+inp_json["from"]
+            else: # all files except demo only have from field instead of from_name
+                from_name = "from:"+inp_json["from"]
+        except:
+            if self.corename == 'demo':
+                from_name = "from_name:*"
             else:
-                num = 50000
-            date = "date:[2004-02-04T00:00:00Z-{:d}DAY TO NOW]".format(num)
-    except:
-        date = "date:*"
+                from_name = "from:*"
+        try:
+            subject = "subject:"+inp_json["topic"]
+        except:
+            subject = "subject:*"
+        try:
+            content = "content:" + inp_json["attachment"]
+        except:
+            content = "content:*"
+        try:
+            if inp_json["total"]:
+                num_rows = 10000
+        except:
+            pass
+        try:
+            num_rows = inp_json["piece"]
+        except:
+            # if not specified last x piece, return all results
+            num_rows = 50000
+        try:
+            date = inp_json["time"]
+            if "all" in date:
+                num_rows = 50000
+                date = "date:*"
+            else:
+                try:
+                    num = eval(''.join([n for n in inp_json["time"] if n.isdigit()]))
+                except:
+                    num = 1
+                if "day" in inp_json["time"].lower():
+                    pass
+                elif "month" in inp_json["time"].lower():
+                    num *= 30
+                elif "year" in inp_json["time"].lower():
+                    num *= 365
+                else:
+                    num = 50000
+                if self.corename == 'demo':
+                    date = "date:[2004-02-04T00:00:00Z-{:d}DAY TO NOW]".format(num)
+                else:
+                    date = "date:[NOW-{:d}DAY TO NOW]".format(num)
+        except:
+            date = "date:*"
+        # combine string
+        query = from_name
+        fquery = subject + " AND " + content + " AND " + date
+        # https://github.com/django-haystack/pysolr
+        if test:
+            # solr = pysolr.Solr("http://104.248.61.45:8983/solr/mdl/")
+            if self.corename == 'demo':
+                solr = pysolr.Solr("http://localhost:8983/solr/mdl/")
+            else:
+                url = 'http://localhost:8983/solr/' + str(self.corename) + '/'
+                solr = pysolr.Solr(url)
 
-    # combine string
-    query = from_name
-    fquery = subject + " AND " + content + " AND " + date
-
-
-    # https://github.com/django-haystack/pysolr
-    if test: # show mode
-        # solr = pysolr.Solr("http://104.248.61.45:8983/solr/mdl/")
-        solr = pysolr.Solr("http://localhost:8983/solr/mdl/")
-    else: # api mode; return json
-        # solr = pysolr.Solr("http://104.248.61.45:8983/solr/mdl/", results_cls=dict)
-        solr = pysolr.Solr("http://localhost:8983/solr/mdl/", results_cls=dict)
-    # results = solr.search(q="from_name:Yates, Mike AND subject:* AND to_name:*", sort="date desc", rows=100)
-    results = solr.search(q=query, fq=fquery, sort="date desc", rows=num_rows)
-
-    return results
+        # api mode; return json
+        else: 
+            if self.corename == 'demo':
+                solr = pysolr.Solr("http://localhost:8983/solr/mdl/", results_cls=dict)
+            else:
+                url = url = 'http://localhost:8983/solr/' + str(self.corename) + '/'
+                solr = pysolr.Solr(url, results_cls=dict)
+        # results = solr.search(q="from_name:Yates, Mike AND subject:* AND to_name:*", sort="date desc", rows=100)
+        results = solr.search(q=query, fq=fquery, sort="date desc", rows=num_rows)
+        return results
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
