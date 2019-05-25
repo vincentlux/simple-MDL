@@ -5,7 +5,7 @@
         <b-form-file
           v-model="file"
           :state="Boolean(file)"
-          placeholder="Choose an email Archive ..."
+          placeholder="Choose an email archive ..."
           drop-placeholder="Drop file here..."
         ></b-form-file>
         <!-- <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div> -->
