@@ -4,5 +4,6 @@ __pycache__/
 .vscode/
 dist/
 
+corename_list.txt
 **/data
 alexa-skills/
