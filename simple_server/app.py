@@ -1,9 +1,11 @@
-import uuid, re, os
+import uuid, re, os, sys
+sys.path.append('./solr')
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 from werkzeug import secure_filename
 from post_processing import str_to_mdl
-import search as s
+import search
+from solr.indexing import indexing
 
 
 # configuration
@@ -54,7 +56,7 @@ def simple():
         # get SIMPLE query and call solr to get result
         query = post_data["query"]
         try:        
-            res = s.search(query)
+            res = search.search(query)
         except Exception as e:
             if '?' not in query:
                 raise InvalidUsage(e,True, status_code=404)
@@ -95,9 +97,12 @@ def upload_file():
    if request.method == 'POST':
       f = request.files['file']
       if f and allowed_file(f.filename):
-          f.save(os.path.join('../solr/data/Mail', secure_filename(f.filename)))
-          print(secure_filename(f.filename))
+          f.save(os.path.join('./data/Mail', secure_filename(f.filename)))
+          filename = secure_filename(f.filename)
+          
           # next thing to do: pass filename to indexing.py then automating
+          corename = indexing(filename=filename)
+          print(corename)
           return 'upload successfully'
       else:
           return 'only allow .txt or .mbox'

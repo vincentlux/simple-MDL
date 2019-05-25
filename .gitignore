@@ -4,5 +4,5 @@ __pycache__/
 .vscode/
 dist/
 
-solr/data
+**/data
 alexa-skills/

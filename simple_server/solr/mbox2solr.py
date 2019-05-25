@@ -1,4 +1,4 @@
-import argparse, re, os, subprocess
+import argparse, datetime, re, os, subprocess
 import mailbox
 from datetime import datetime
 from xml.sax.saxutils import escape
@@ -10,7 +10,7 @@ class mbox2solr:
         self.f_name = f_name
         self.dir_in = dir_in
         # create sep folder for different file
-        self.dir_out = os.path.join(dir_out,f_name.split('.')[0])
+        self.dir_out = os.path.join(dir_out,f_name.replace('.', '_'))
         self.f_in = os.path.join(dir_in, f_name)
         self.create_dir(self.dir_in)
         self.create_dir(self.dir_out)
@@ -190,12 +190,6 @@ class mbox2solr:
         command = 'bash solr.sh ' + corename + ' ' + dirname
         password = os.environ.get('sudopass')
         p = os.system('echo %s|sudo -S %s' % (password, command))
-        print(p)
-        raise NotImplementedError
-        # in .sh: 
-        # 1. add new core
-        # 2. add field ?
-        # 3. indexing by designated xml dir
 
 
         # output = subprocess.call(["./test.sh","xyz","1234"])
