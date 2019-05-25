@@ -112,6 +112,15 @@ def upload_file():
       else:
           return 'only allow .txt or .mbox'
 
+# regex for speech to result
+@app.route('/reset_solr', methods=['GET','POST'])
+def reset_solr():
+    if request.method == 'POST':
+        post_data = request.get_json()
+        print(post_data)
+        test_search.setSolr('demo')
+        return 'reset to demo'
+
 # connction check route
 @app.route('/ping', methods=['GET'])
 @cross_origin(origin='*')

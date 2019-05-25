@@ -59,8 +59,8 @@
           this.UploadErrMsg = res.data;
           console.log(this.uploadErrMsg);
           this.uploaded = true;
-          console.log(this.uploaded)
-          this.demo();
+          console.log(this.uploaded);
+          this.nextPage();
         })
         .catch((error) => {
           console.error(error);
@@ -70,7 +70,22 @@
         this.file = this.$refs.file.files[0];
       },
       demo(){
-        this.$router.push({path: '/test'})
+        // reset corename to demo
+        console.log('reset here');
+        const query = {'query':'reset'}
+        
+        const path = 'https://mdl.unc.edu/api/reset_solr';
+        axios.post(path, query)
+          .then((res)=>{
+            console.log(res);
+            })
+          .catch((error) => {
+            console.error(error);
+            });
+        this.$router.push({path: '/test'});
+      },
+      nextPage(){
+        this.$router.push({path: '/test'});
         // window.location.href = "http://localhost:8080/test";
       },
     }
