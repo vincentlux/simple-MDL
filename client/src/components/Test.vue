@@ -44,19 +44,19 @@
         </p>
         <p class="card-text">
             From: {{ elem.from[0] }}
-            From_name: {{ elem.from_name[0].replace(/ *\<[^>]*\> */g, "") }}
+            <!-- From_name: {{ elem.from_name[0].replace(/ *\<[^>]*\> */g, "") }} -->
         </p>
         <p class="card-text" v-if="elem.to != null">
             To: {{ elem.to[0] }}
-            To_name: {{ elem.to_name[0].replace(/<(?!\/?p\b)[^>]+>/ig, "") }}
+            <!-- To_name: {{ elem.to_name[0].replace(/<(?!\/?p\b)[^>]+>/ig, "") }} -->
         </p>
         <p class="card-text" v-if="elem.to == null && elem.to_name != null">
             To: {{ elem.to }}
-            To_name: {{ elem.to_name[0].replace(/<(?!\/?p\b)[^>]+>/ig, "") }}
+            <!-- To_name: {{ elem.to_name[0].replace(/<(?!\/?p\b)[^>]+>/ig, "") }} -->
         </p>
         <p class="card-text" v-if="elem.to == null && elem.to_name == null">
             To: {{ elem.to }}
-            To_name: {{ elem.to_name }}
+            <!-- To_name: {{ elem.to_name }} -->
         </p>
 
         <p class="card-text">
