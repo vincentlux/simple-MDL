@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <h1 class="cover-heading ">Simple Search (test)</h1>
+    <h1 class="cover-heading ">Simple MDL Search</h1>
     <b-button variant="link" v-on:click="mdlGrammar">MDL Grammar</b-button>
       <b-form @submit="onSubmit">
         <b-form-group id="Inp1"
