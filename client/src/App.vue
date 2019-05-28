@@ -42,6 +42,9 @@ export default {
 
 
 <style>
+/* @import '@/assets/scss/custom-bootstrap.scss'; */
+/* @import '../node_modules/bootstrap/scss/bootstrap.scss';
+@import '../node_modules/bootstrap-vue/src/index.scss'; */
 #app {
   margin-top: 60px;
 }
@@ -63,7 +66,7 @@ export default {
 .header .cover-heading {
   font-size: 46px;
   color: #5721ed;
-  margin-top: 1.6rem;
+  margin-top: 6.6rem;
   margin-bottom: 1.6rem;
 }
 

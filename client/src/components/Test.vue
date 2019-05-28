@@ -1,8 +1,9 @@
 <template>
   <div class="header">
+    <Sidebar></Sidebar>
     <h1 class="cover-heading ">Simple MDL Search</h1>
     <b-button variant="link" v-on:click="mdlGrammar">MDL Grammar</b-button>
-      <b-form @submit="onSubmit">
+      <b-form @submit="onSubmit" class="mx-auto" style="width: 900px;">
         <b-form-group id="Inp1"
                     label-sr-only
                     label-for="Inp1">
@@ -24,17 +25,20 @@
     </b-form>
 
 
-    <b-card class="text" v-show="isResult&noError">
+    <!-- <b-card class="text mx-auto" v-show="isResult&noError" style="width: 900px;">
       Fetched  {{ this.num }} email(s) by {{ this.time }} s.
-    </b-card>
+    </b-card> -->
+    <div class="text mx-auto" v-show="isResult&noError" style="width: 900px;">
+      <h5>Fetched  {{ this.num }} email(s) by {{ this.time }} s.</h5>
+    </div>
     <b-card class="text-center" v-show="!noError">
       <b-button variant="warning link" v-on:click="mdlGrammar">{{ this.errMsg }}</b-button>
     </b-card>
   
 
-  <b-pagination v-show="isResult&noError&this.num!=0" :total-rows="0 || parseInt(this.num)" v-model="currentPage" :per-page="5">
-  </b-pagination>
-  <div class="searchResult" v-show="isResult&noError" transition="expand">
+  <!-- <b-pagination v-show="isResult&noError&this.num!=0" :total-rows="0 || parseInt(this.num)" v-model="currentPage" :per-page="5" align="center">
+  </b-pagination> -->
+  <div class="searchResult mx-auto" v-show="isResult&noError" transition="expand" style="width: 900px;">
         <a v-for="elem in filter(resObj)" :key="elem.message_id">
 
     <b-card no-body>
@@ -65,7 +69,7 @@
     </b-card>
     </a>
   </div>
-  <b-pagination v-show="isResult&noError&this.num!=0" :total-rows="0 || parseInt(this.num)" v-model="currentPage" :per-page="5">
+  <b-pagination v-show="isResult&noError&this.num!=0" :total-rows="0 || parseInt(this.num)" v-model="currentPage" :per-page="5" align="center">
   </b-pagination>
   
   <!-- Modal Component -->
@@ -100,6 +104,7 @@
   import axios from 'axios';
   import qs from 'qs';
   import Upload from './Upload';
+  import Sidebar from './Sidebar';
   var audioContext = new(window.AudioContext || window.webkitAudioContext)();
   //var socket = io.connect('http://3.86.172.253', {path: '/ws/'});
   var socket = io.connect('wss://mdl.unc.edu', {path: '/ws/'});
@@ -111,7 +116,7 @@
   export default {
     // inject: ['reload'],
     components: {
-      Upload
+      Upload, Sidebar
     },
     data() {
       return {
