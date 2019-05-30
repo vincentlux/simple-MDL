@@ -66,9 +66,18 @@ def delete_file(file_name):
                     if unique_filename[f['title']] == 0:
                         unique_filename.pop(f['title'])
                     else:
-                        unique_filename[f['title']] -= 1
+                        #unique_filename[f['title']] -= 1
+                        print(unique_filename)
                 except:
+                    print('error!!!',f['title'])
                     pass
+                
+                # if only 'Enron Dataset' in BOOKS, remove everything from
+                # unique_filename
+                print(BOOKS)
+                print(len(BOOKS))
+                if len(BOOKS) == 1:
+                    unique_filename.clear()
                 return jsonify(response_object)
 
 
