@@ -12,7 +12,7 @@
 
         <!-- <button v-on:click="submitFile()">Submit</button> -->
         <h4 style=" margin-bottom: 1.5rem"> </h4>
-        <b-progress :value="uploadPercentage" :max=101 v-show="file" show-progress animated></b-progress>
+        <b-progress :value="uploadPercentage" :max=101 v-show="file&&!uploaded" show-progress animated></b-progress>
         <h4 style=" margin-bottom: 1.5rem"> </h4>
         <b-button class = "button" variant="danger" v-show="file" v-on:click="submitFile">
         <!-- <b-spinner small type="grow" v-show="!firstLoad&!uploaded"></b-spinner> -->
@@ -58,8 +58,11 @@
         ).then((res)=>{
           this.UploadErrMsg = res.data;
           console.log(this.UploadErrMsg);
+          // NEED to use event here to pass the filename back to Test.vue in order to show the current archive
+          this.$emit('fileNamePass', this.UploadErrMsg)
           this.uploaded = true;
           console.log(this.uploaded);
+          // get book here...
           this.thisPage();
         })
         .catch((error) => {
@@ -85,13 +88,14 @@
         this.$router.push({path: '/test'});
       },
       thisPage(){
-        // this.$router.push({path: '/'});
-        window.location.href = "http://localhost:8080/";
+        this.$router.push({path: '/'});
+        // window.location.href = "http://localhost:8080/";
       },
       nextPage(){
         this.$router.push({path: '/test'});
         // window.location.href = "http://localhost:8080/test";
       },
+
     }
   }
 </script>

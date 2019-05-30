@@ -7,9 +7,9 @@
         <div class="bar"></div>
         <div class="bar"></div> -->
         </template>
-        <b-dropdown-item>Help</b-dropdown-item>
+        <b-dropdown-item @click="mdlGrammar">Help</b-dropdown-item>
         <b-dropdown-item @click="showModal">Upload</b-dropdown-item>
-        <b-dropdown-item>Delete</b-dropdown-item>
+        <!-- <b-dropdown-item>Delete</b-dropdown-item> -->
 
     </b-dropdown>
 
@@ -25,12 +25,14 @@
             id="book-modal"
             title="Upload a new file"
             hide-footer>
-        <Upload></Upload>
+        <Upload @fileNamePass="fileNamePass1"></Upload>
         <table class="table table-hover">
           <thead>
             <tr>
               <th scope="col">Archive</th>
-
+              <th></th>
+              <!-- <th></th>
+              <th></th> -->
             </tr>
           </thead>
           <tbody>
@@ -38,8 +40,8 @@
               <td>{{ book.title }}</td>
               <td>
                 <!-- <div class="btn-group" role="group"> -->
-                  <button type="button" class="btn btn-primary btn-sm">Apply</button>
-                  <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                  <button type="button" class="btn btn-primary btn-sm" @click="applyFile(book)">Apply</button>
+                  <button type="button" class="btn btn-danger btn-sm" v-show="ifDemo(book)" @click="deleteFile(book)">Delete</button>
                 <!-- </div> -->
               </td>
             </tr>
@@ -98,9 +100,77 @@
       }
     },
     methods: {
+        fileNamePass1(fname){
+            // getbooks here to update the archive list
+            this.getBooks();
+            this.$emit('fileNamePass2', fname);
+
+        },
+        ifDemo(book){
+            if(book.title == 'Enron Dataset'){
+                return false;
+            }
+            else{
+                return true;
+            }
+        },
+        applyFile(book){
+            console.log(book.title);
+            const path = `https://mdl.unc.edu/api/file_list/${book.title}`;
+            axios.put(path)
+                .then((res) => {
+                // console.log(res);
+                this.getBooks();
+                this.$emit('fileNamePass2', res.data.title);
+                })
+                .catch((error) => {
+                // eslint-disable-next-line
+                console.error(error);
+                this.getBooks();
+                
+                });
+
+            // this.$router.push({path: '/'});
+            this.$refs['addBookModal'].hide();
+        },
+
+        deleteFile(book){
+            const path = `https://mdl.unc.edu/api/delete_file/${book.title}`;
+            axios.put(path)
+                .then((res) => {
+                // console.log(res);
+                this.getBooks();
+                })
+                .catch((error) => {
+                // eslint-disable-next-line
+                console.error(error);
+                this.getBooks();
+                });
+
+            // this.$refs['addBookModal'].hide();
+
+            // const path = `https://mdl.unc.edu/api/delete_file/${book.title}`;
+            // axios.put(path)
+            //     .then((res) => {
+            //     // console.log(res);
+            //     this.getBooks();
+            //     this.$emit('fileNamePass2', res.data.title);
+            //     })
+            //     .catch((error) => {
+            //     // eslint-disable-next-line
+            //     console.error(error);
+            //     this.getBooks();
+            //     });
+
+            // this.$refs['addBookModal'].hide();
+        },
+        mdlGrammar(){
+        var url = "https://simple.unc.edu/documentation/";
+        window.open(url, '_blank', 'x=y');
+        },
         showModal(){ 
             // modal should be added
-            console.log('showModal')
+            // console.log('showModal')
             // this.$refs['upload-modal'].show()
             this.$refs['addBookModal'].show()
         },
@@ -113,7 +183,8 @@
             this.$refs['upload-modal'].toggle('#toggle-btn')
         },
         getBooks() {
-        const path = 'http://localhost:5001/books';
+        // const path = 'http://localhost:5001/books';
+        const path = 'https://mdl.unc.edu/api/file_list';
         axios.get(path)
             .then((res) => {
             this.books = res.data.books;
@@ -123,41 +194,7 @@
             console.error(error);
             });
         },
-        addBook(payload) {
-        const path = 'http://localhost:5001/books';
-        axios.post(path, payload)
-            .then(() => {
-            this.getBooks();
-            })
-            .catch((error) => {
-            // eslint-disable-next-line
-            console.log(error);
-            this.getBooks();
-            });
-        },
-        initForm() {
-        this.addBookForm.title = '';
-        // this.addBookForm.author = '';
-        this.addBookForm.read = [];
-        },
-        onSubmit(evt) {
-        evt.preventDefault();
-        this.$refs.addBookModal.hide();
-        let read = false;
-        if (this.addBookForm.read[0]) read = true;
-        const payload = {
-            title: this.addBookForm.title,
-            // author: this.addBookForm.author,
-            read, // property shorthand
-        };
-        this.addBook(payload);
-        this.initForm();
-        },
-        onReset(evt) {
-        evt.preventDefault();
-        this.$refs.addBookModal.hide();
-        this.initForm();
-        },
+        
     },
     created() {
         this.getBooks();

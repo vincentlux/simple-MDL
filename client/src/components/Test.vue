@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <Sidebar></Sidebar>
+    <Sidebar @fileNamePass2="getFileName"></Sidebar>
     <h1 class="cover-heading ">Simple MDL Search</h1>
     <b-button variant="link" v-on:click="mdlGrammar">MDL Grammar</b-button>
       <b-form @submit="onSubmit" class="mx-auto" style="width: 900px;">
@@ -24,7 +24,9 @@
       <b-button class = "button" variant="danger" v-show="btnReset" v-on:click="redirectError">Reset</b-button>
     </b-form>
     <div>
-      <h3> Current dataset: xxx</h3>
+          <Alert :message="this.archiveName"></Alert>
+
+      <!-- <h3> Current dataset: {{this.archiveName}}</h3> -->
     </div>
 
     <!-- <b-card class="text mx-auto" v-show="isResult&noError" style="width: 900px;">
@@ -107,6 +109,7 @@
   import qs from 'qs';
   import Upload from './Upload';
   import Sidebar from './Sidebar';
+  import Alert from './Alert.vue';
   var audioContext = new(window.AudioContext || window.webkitAudioContext)();
   //var socket = io.connect('http://3.86.172.253', {path: '/ws/'});
   var socket = io.connect('wss://mdl.unc.edu', {path: '/ws/'});
@@ -118,7 +121,7 @@
   export default {
     // inject: ['reload'],
     components: {
-      Upload, Sidebar
+      Upload, Sidebar, Alert
     },
     data() {
       return {
@@ -147,6 +150,7 @@
         errMsg: '',
         firstLoad: true,
         currentPage:1,
+        archiveName: 'Current archive: Enron Dataset',
       }
     },
     watch: { // to reset param after an error happens
@@ -161,10 +165,10 @@
       },
     },
     methods: {
+      getFileName(fName){
+        this.archiveName = "Current archive: "+fName;
+      },
       fetchResult(query){
-      // console.log(JSON.stringify(query));
-      //const path = 'http://167.99.3.111:5001/simple';
-      //const path = 'http://3.86.172.253:5001/simple';
       const path = 'https://mdl.unc.edu/api/simple';
       // Axios
       axios.post(path, query)
