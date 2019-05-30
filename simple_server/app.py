@@ -6,6 +6,7 @@ from werkzeug import secure_filename
 from post_processing import str_to_mdl
 from search import Search 
 from solr.indexing import indexing
+from utils import delete_core
 
 # configuration
 DEBUG = True
@@ -23,28 +24,52 @@ test_search = Search()
 
 BOOKS = [
     {
-        'title': 'demo',
-        'read': True
-    },
-    {
-        'title': 'Harry Potter and the Philosopher\'s Stone',
+        'title': 'Enron Dataset',
+        'corename': 'mdl',
         'read': False
     },
-    {
-        'title': 'Green Eggs and Ham',
-        'read': True
-    }
 ]
 
-@app.route('/books', methods=['GET'])
-def all_books():
+unique_filename = {}
+
+@app.route('/file_list', methods=['GET'])
+def all_files():
     return jsonify({
         'status': 'success',
         'books': BOOKS
     })
 
 
+@app.route('/file_list/<file_name>', methods=['PUT'])
+def set_file(file_name):
+    response_object = {'status': 'success'}
+    if request.method == 'PUT':
+        # post_data = request.get_json()
+        print(file_name)
+        for f in BOOKS:
+            if f['title'] == file_name:
+                print(f)
+                test_search.setSolr(f['corename'])
+                response_object['title'] = file_name
+                return jsonify(response_object)
 
+@app.route('/delete_file/<file_name>', methods=['PUT'])
+def delete_file(file_name):
+    response_object = {'status': 'success'}
+    if request.method == 'PUT':
+        for f in BOOKS:
+            if f['title'] == file_name:
+                # assert f['title'] != 'Enron Dataset'
+                res = delete_core(f['corename'])
+                BOOKS.remove(f)
+                try:
+                    if unique_filename[f['title']] == 0:
+                        unique_filename.pop(f['title'])
+                    else:
+                        unique_filename[f['title']] -= 1
+                except:
+                    pass
+                return jsonify(response_object)
 
 
 
@@ -132,11 +157,19 @@ def upload_file():
           print(corename, 'start setSolr')
           
           test_search.setSolr(corename)
+          
+          # deal with filename to avoid dupe name
+          filename = avoid_dupe(filename)
+
+          # should append corename to BOOKS for later delete
           BOOKS.append({
             'title': filename,
+            'corename': corename,
             'read': True
           })
-          return 'upload successfully'
+          
+          return filename
+          # return 'upload successfully'
 
       else:
           return 'only allow .txt or .mbox'
@@ -147,7 +180,7 @@ def reset_solr():
     if request.method == 'POST':
         post_data = request.get_json()
         print(post_data)
-        test_search.setSolr('demo')
+        test_search.setSolr('mdl')
         return 'reset to demo'
 
 # connction check route
@@ -166,6 +199,18 @@ def err_hinting(err_in, no_ques_mark=False):
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def avoid_dupe(filename):
+    if filename not in unique_filename.keys():
+        unique_filename[filename] = 0
+        return filename
+    else:
+        unique_filename[filename] += 1
+        unique_id = filename + '(' + str(unique_filename[filename]) + ')'
+        # add this id to dict as well incase uploading eg. a.txt(1)
+        unique_filename[unique_id] = 0
+        return unique_id
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)

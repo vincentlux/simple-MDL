@@ -5,7 +5,7 @@ import cymantix_grammar as cg
 
 class Search():
     def __init__(self):
-        self.corename = 'demo'
+        self.corename = 'mdl'
         
     def setSolr(self, corename):    
         self.corename = corename
@@ -20,12 +20,12 @@ class Search():
             # '&' for multiple person
             inp_json["from"] = ' '.join(inp_json["from"].split())
             inp_json["from"] = inp_json["from"].replace("' '", "&")
-            if self.corename == 'demo':
+            if self.corename == 'mdl':
                 from_name = "from_name:"+inp_json["from"]
             else: # all files except demo only have from field instead of from_name
                 from_name = "from:"+inp_json["from"]
         except:
-            if self.corename == 'demo':
+            if self.corename == 'mdl':
                 from_name = "from_name:*"
             else:
                 from_name = "from:*"
@@ -65,7 +65,7 @@ class Search():
                     num *= 365
                 else:
                     num = 50000
-                if self.corename == 'demo':
+                if self.corename == 'mdl':
                     date = "date:[2004-02-04T00:00:00Z-{:d}DAY TO NOW]".format(num)
                 else:
                     date = "date:[NOW-{:d}DAY TO NOW]".format(num)
@@ -77,7 +77,7 @@ class Search():
         # https://github.com/django-haystack/pysolr
         if test:
             # solr = pysolr.Solr("http://104.248.61.45:8983/solr/mdl/")
-            if self.corename == 'demo':
+            if self.corename == 'mdl':
                 solr = pysolr.Solr("http://localhost:8983/solr/mdl/")
             else:
                 url = 'http://localhost:8983/solr/' + str(self.corename) + '/'
@@ -85,7 +85,7 @@ class Search():
 
         # api mode; return json
         else: 
-            if self.corename == 'demo':
+            if self.corename == 'mdl':
                 solr = pysolr.Solr("http://localhost:8983/solr/mdl/", results_cls=dict)
             else:
                 url = url = 'http://localhost:8983/solr/' + str(self.corename) + '/'
@@ -97,7 +97,7 @@ class Search():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--command', type=str, default='',
-            help='Test mode. Cymantix command eg. ?LAST all EMAIL from "Mike" ')
+                        help='Test mode. Cymantix command eg. ?LAST all EMAIL from "Mike" ')
     args = parser.parse_args()
 
     # pass args to search

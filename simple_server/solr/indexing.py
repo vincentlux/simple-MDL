@@ -16,6 +16,7 @@ def indexing(filename='chunk_0_filtered.txt'):
     print(corename, 'finished')
     return corename
 
+
 def save_name_for_record(corename):
     with open('corename_list.txt', 'a') as f:
         f.write(corename+'\n')

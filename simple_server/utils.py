@@ -1,3 +1,9 @@
+import subprocess
+def delete_core(corename):
+    subprocess.run(["bash", "delete_core.sh", str(corename)])
+    print(f'successfully deleted {corename}')
+    return 'succeed'
+
 def add_quote(inp):
     try:
         return int(inp)
