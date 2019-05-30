@@ -147,22 +147,19 @@
                 this.getBooks();
                 });
 
-            // this.$refs['addBookModal'].hide();
 
-            // const path = `https://mdl.unc.edu/api/delete_file/${book.title}`;
-            // axios.put(path)
-            //     .then((res) => {
-            //     // console.log(res);
-            //     this.getBooks();
-            //     this.$emit('fileNamePass2', res.data.title);
+            // IF does not want to show that file already deleted: 
+
+            // this.$emit('fileNamePass2', 'Enron Dataset');
+            // const query = {'query':'reset'}
+            // const path = 'https://mdl.unc.edu/api/reset_solr';
+            // axios.post(path, query)
+            //   .then((res)=>{
+            //     console.log(res);
             //     })
-            //     .catch((error) => {
-            //     // eslint-disable-next-line
+            //   .catch((error) => {
             //     console.error(error);
-            //     this.getBooks();
             //     });
-
-            // this.$refs['addBookModal'].hide();
         },
         mdlGrammar(){
         var url = "https://simple.unc.edu/documentation/";
