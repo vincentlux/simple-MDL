@@ -7,7 +7,6 @@ from post_processing import str_to_mdl
 from search import Search 
 from solr.indexing import indexing
 
-
 # configuration
 DEBUG = True
 
@@ -21,6 +20,33 @@ CORS(app, supports_credentials=True)
 # extension
 ALLOWED_EXTENSIONS = set(['txt', 'mbox'])
 test_search = Search()
+
+BOOKS = [
+    {
+        'title': 'demo',
+        'read': True
+    },
+    {
+        'title': 'Harry Potter and the Philosopher\'s Stone',
+        'read': False
+    },
+    {
+        'title': 'Green Eggs and Ham',
+        'read': True
+    }
+]
+
+@app.route('/books', methods=['GET'])
+def all_books():
+    return jsonify({
+        'status': 'success',
+        'books': BOOKS
+    })
+
+
+
+
+
 
 class InvalidUsage(Exception):
     status_code = 400
@@ -106,7 +132,10 @@ def upload_file():
           print(corename, 'start setSolr')
           
           test_search.setSolr(corename)
-
+          BOOKS.append({
+            'title': filename,
+            'read': True
+          })
           return 'upload successfully'
 
       else:

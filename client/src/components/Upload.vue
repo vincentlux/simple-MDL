@@ -17,8 +17,8 @@
         <b-button class = "button" variant="danger" v-show="file" v-on:click="submitFile">
         <!-- <b-spinner small type="grow" v-show="!firstLoad&!uploaded"></b-spinner> -->
           Upload</b-button>
-        <h4 style=" margin-bottom: 1.5rem" v-show="!file"> or</h4>
-        <b-button class = "button" variant="danger" v-show="!file" v-on:click="demo">Try with demo email archive</b-button>
+        <!-- <h4 style=" margin-bottom: 1.5rem" v-show="!file"> or</h4>
+        <b-button class = "button" variant="danger" v-show="!file" v-on:click="demo">Try with demo email archive</b-button> -->
     </div>
   </div>
 </template>
@@ -57,10 +57,10 @@
             }
         ).then((res)=>{
           this.UploadErrMsg = res.data;
-          console.log(this.uploadErrMsg);
+          console.log(this.UploadErrMsg);
           this.uploaded = true;
           console.log(this.uploaded);
-          this.nextPage();
+          this.thisPage();
         })
         .catch((error) => {
           console.error(error);
@@ -83,6 +83,10 @@
             console.error(error);
             });
         this.$router.push({path: '/test'});
+      },
+      thisPage(){
+        // this.$router.push({path: '/'});
+        window.location.href = "http://localhost:8080/";
       },
       nextPage(){
         this.$router.push({path: '/test'});

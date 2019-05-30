@@ -23,7 +23,9 @@
       <b-button class = "button" variant="danger" v-show="btnStop" v-on:click="stopRecording">Stop</b-button>
       <b-button class = "button" variant="danger" v-show="btnReset" v-on:click="redirectError">Reset</b-button>
     </b-form>
-
+    <div>
+      <h3> Current dataset: xxx</h3>
+    </div>
 
     <!-- <b-card class="text mx-auto" v-show="isResult&noError" style="width: 900px;">
       Fetched  {{ this.num }} email(s) by {{ this.time }} s.
