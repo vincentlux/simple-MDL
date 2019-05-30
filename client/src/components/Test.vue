@@ -339,25 +339,37 @@
     },
 
     created() {
-       const that = this;
-       socket.on('SPEECH_RESULTS', function(text) {
-         if('q' == text){
-           that.resultError = true;
-           console.log("error")
-         }else{
-           that.form.name = text;
-         }
-       })
-         if (navigator.mediaDevices.getUserMedia) {
-           navigator.webkitGetUserMedia({ audio: true }, function(stream) {
-             that.successCallback(stream)
-           }, function(error) {
-             that.errorCallback(error)
-           });
-         } else {
-           // console.log('getUserMedia not supported on your browser!');
-         }
-       },
+      const that = this;
+      console.log('start')
+      socket.on('SPEECH_RESULTS', function(text) {
+        if('q' == text){
+          that.resultError = true;
+          console.log("error")
+        }else{
+          that.form.name = text;
+        }
+      })
+        if (navigator.mediaDevices.getUserMedia) {
+          navigator.webkitGetUserMedia({ audio: true }, function(stream) {
+            that.successCallback(stream)
+          }, function(error) {
+            that.errorCallback(error)
+          });
+        } else {
+          // console.log('getUserMedia not supported on your browser!');
+        }
+
+      // everytime when start, initiate with enron dataset
+      const query = {'query':'reset'}
+      const path = 'https://mdl.unc.edu/api/reset_solr';
+      axios.post(path, query)
+        .then((res)=>{
+          // console.log(res);
+          })
+        .catch((error) => {
+          console.error(error);
+          });
+      },
     }
 </script>
 
