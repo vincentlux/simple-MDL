@@ -8,7 +8,7 @@
         <div class="bar"></div> -->
         </template>
         <b-dropdown-item @click="mdlGrammar">Help</b-dropdown-item>
-        <b-dropdown-item @click="showModal">Upload</b-dropdown-item>
+        <b-dropdown-item @click="showModal">Select Archive</b-dropdown-item>
         <!-- <b-dropdown-item>Delete</b-dropdown-item> -->
 
     </b-dropdown>
@@ -23,9 +23,9 @@
 
     <b-modal ref="addBookModal"
             id="book-modal"
-            title="Upload a new file"
+            title="Select or Upload"
             hide-footer>
-        <Upload @fileNamePass="fileNamePass1"></Upload>
+        <!-- <Upload @fileNamePass="fileNamePass1"></Upload> -->
         <table class="table table-hover">
           <thead>
             <tr>
@@ -45,6 +45,21 @@
                 <!-- </div> -->
               </td>
             </tr>
+          </tbody>
+        </table>
+
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Upload</th>
+              <th></th>
+              <!-- <th></th>
+              <th></th> -->
+            </tr>
+          </thead>
+            <tbody>
+                <div><p  style="line-height:15px;"> </p></div>
+                <Upload @fileNamePass="fileNamePass1"></Upload>
           </tbody>
         </table>
         <!-- <b-form @submit="onSubmit" @reset="onReset" class="w-100">
