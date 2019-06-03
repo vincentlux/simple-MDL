@@ -29,14 +29,40 @@ class Search():
                 from_name = "from_name:*"
             else:
                 from_name = "from:*"
+        
+        # if sub=subject, keep as it is 
+        # if sub=full, append to content
         try:
-            subject = "subject:"+inp_json["topic"]
+            inp_json["sub"]
+            if inp_json["sub"] == 'subject':
+                search_subject = True
+            else:
+                search_subject = False
         except:
-            subject = "subject:*"
+            search_subject = True
+        print(search_subject)
+
+        if search_subject: 
+            try:
+                subject = "subject:" + inp_json["topic"]
+            except:
+                subject = "subject:*"
+        else: # search "topic" in both subject and content
+            try:
+                temp_subject = "subject:" + inp_json["topic"]
+                temp_content = "content:" + inp_json["topic"]
+                subject = "(" + temp_subject + " OR " + temp_content + ")"
+            except:
+                subject = "subject:*"
+
+
         try:
             content = "content:" + inp_json["attachment"]
         except:
             content = "content:*"
+
+
+
         try:
             if inp_json["total"]:
                 num_rows = 10000
@@ -74,6 +100,10 @@ class Search():
         # combine string
         query = from_name
         fquery = subject + " AND " + content + " AND " + date
+
+        if test:
+            print(query)
+            print(fquery)
         # https://github.com/django-haystack/pysolr
         if test:
             # solr = pysolr.Solr("http://104.248.61.45:8983/solr/mdl/")
@@ -101,7 +131,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # pass args to search
-    results = search(args.command, test=True)
+    s = Search()
+    results = s.search(command=args.command, test=True)
     print("Saw {0} result(s).".format(len(results)))
 
     # Just loop over it to access the results.

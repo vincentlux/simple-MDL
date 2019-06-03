@@ -14,11 +14,12 @@ grammar = Grammar(
     sc_EMAIL_from   = "EMAIL" space op_lit_name
     sc_EMAIL_attach = "EMAIL" space sc_attach
     sc_attach       = "MSWORD" / "PDF" / "GIF"
+    sc_sub          = "full" / "subject"
     op              = op_trig space op_first space
     op_first        = op_TOTAL / op_LAST / op_lit_ON / op_lit_name 
-    op_lit_ON       = op_lit_name* op_ON space op_lit_topic space sc_attach* space op_LAST*
-    op_lit_topic    = "'" chars "'"
-    op_lit_name     = ("'" (chars space)+ "'" space)+
+    op_lit_ON       = op_lit_name* op_ON space op_lit_topic space sc_sub* space sc_attach* space op_LAST*
+    op_lit_topic    = '"' chars '"'
+    op_lit_name     = ('"' (chars space)+ '"' space)+
     op_ON           = "ON"
     op_LAST         = "LAST" space (op_LAST_time / op_LAST_piece)
     op_LAST_piece   = ~"[0-9]*" 
@@ -26,7 +27,7 @@ grammar = Grammar(
     op_TOTAL        = "TOTAL"
     op_trig         = "?"
     space           = " "*
-    chars           = ~"[A-z0-9]*"
+    chars           = ~"[A-z0-9 ]*"
     """
 )
 
@@ -73,6 +74,9 @@ class EntryParser(parsimonious.NodeVisitor):
     def visit_sc_attach(self, node, vc):
         self.entry['attachment'] = node.text
 
+    def visit_sc_sub(self, node, vc):
+        self.entry['sub'] = node.text
+
     def generic_visit(self, node, visited_children):
         pass
 
@@ -93,8 +97,9 @@ example command:
 """
 
 def c_json(inp):
-    # replace double quote to single quote
-    command = inp.replace('"', "\'")
+    # replace single quote to double quote (bc solr only allow double quote for
+    # specific string search)
+    command = inp.replace("\'", '"')
     return EntryParser(grammar,command).entry
 
 
@@ -102,7 +107,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--command', type=str, default='', help='Test grammar mode. Cymantix command eg. ?LAST all EMAIL from "Mike" ')
     args = parser.parse_args()
-    command = args.command.replace('"', "\'")
+    # command = args.command.replace('"', "\'")
+    command = args.command.replace("\'", '"')
     try:
         res = EntryParser(grammar,command).entry
         print(res)

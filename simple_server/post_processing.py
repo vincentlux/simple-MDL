@@ -2,8 +2,8 @@
 # a mdl query e.g. `?ON "soccer"`
 from utils import add_quote, text2int
 
-keywords = ['LAST','ON','TOTAL','EMAIL', 'MSWORD','PDF','GIF']
-lower_keywords = ['all','day','year','month']
+keywords = ['LAST','ON','TOTAL','EMAIL','MSWORD','PDF','GIF']
+lower_keywords = ['all','day','year','month','subject','full']
 
 def str_to_mdl(inp):
     # convert `one number` to `1 number`
