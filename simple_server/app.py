@@ -152,6 +152,22 @@ def speech_regex():
         response_object['res_query'] = str_to_mdl(raw_query)
         return jsonify(response_object)
 
+@app.route('/upload_file_rn', methods=['GET','POST'])
+def upload_file_rn():
+    if request.method == 'POST':
+        # save file to storage
+        f = request.files['file']
+        # f = request.files['text']
+        # print(f.filename)
+        print(f.filename)
+
+
+        f.save(os.path.join('./data/Mail', secure_filename(f.filename)))
+        return 'success'
+
+        # f = request.files['file']
+
+
 
 @app.route('/upload_file', methods=['GET','POST'])
 def upload_file():
