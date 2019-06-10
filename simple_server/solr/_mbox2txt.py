@@ -1,3 +1,5 @@
+# this code is useless
+
 # See README.md for information and usage.
 #
 # Copyright 2016 Christopher Allen Ogden
