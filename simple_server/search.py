@@ -19,7 +19,7 @@ class Search():
         try:
             # '&' for multiple person
             inp_json["from"] = ' '.join(inp_json["from"].split())
-            inp_json["from"] = inp_json["from"].replace("' '", "&")
+            inp_json["from"] = inp_json["from"].replace('"', '').replace(' ', "&")
             if self.corename == 'mdl':
                 from_name = "from_name:"+inp_json["from"]
             else: # all files except demo only have from field instead of from_name
