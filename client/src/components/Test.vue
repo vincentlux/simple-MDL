@@ -111,10 +111,7 @@
   import Sidebar from './Sidebar';
   import Alert from './Alert.vue';
   var audioContext = new(window.AudioContext || window.webkitAudioContext)();
-  //var socket = io.connect('http://3.86.172.253', {path: '/ws/'});
   var socket = io.connect('wss://mdl.unc.edu', {path: '/ws/'});
-  //var socket = io.connect('http://3.86.172.253/ws', {secure: true});
-  //var socket = io.connect('http://167.99.3.111:5002', {secure: true});
   var ssStream = ss.createStream();
   var scriptNode;
   
@@ -284,7 +281,6 @@
     startRecording() {
 
       console.log("recording!!");
-      // as
       // const languageSelected = this.selected;
       // socket.emit('LANGUAGE_SPEECH', languageSelected);
       this.result = true;
