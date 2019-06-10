@@ -30,16 +30,18 @@ class Search():
             else:
                 from_name = "from:*"
         
-        # if sub=subject, keep as it is 
-        # if sub=full, append to content
+        # if sub==subject, keep as it is 
+        # if sub==full, append to content
         try:
             inp_json["sub"]
-            if inp_json["sub"] == 'subject':
-                search_subject = True
-            else:
-                search_subject = False
         except:
+            # make default search: full
+            inp_json["sub"] = "full"
+
+        if inp_json["sub"] == "subject":
             search_subject = True
+        else:
+            search_subject = False
         print(search_subject)
 
         if search_subject: 
