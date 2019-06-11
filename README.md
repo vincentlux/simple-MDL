@@ -1,6 +1,6 @@
-# Add uploading .mbox file into feature
+##Simple-MDL Project
 
-## todo:
-1. solr part automate(mbox->txts->xmls)
-2. frontend+backend modification
+Frond-end: Vue.js 
+Back-end: Python Flask + solr
+
 
