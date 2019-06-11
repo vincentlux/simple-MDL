@@ -1,6 +1,7 @@
-##Simple-MDL Project
+## Simple-MDL Project
 
-Frond-end: Vue.js 
-Back-end: Python Flask + solr
+`./client` Frond-end: Vue.js 
+
+`./simple_server` Back-end: Python Flask + solr
 
 
