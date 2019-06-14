@@ -309,7 +309,6 @@
       // send to flask here for speech to result (regex) way
       const query = {'query':this.form.speechInp}
       console.log(query)
-      //const path = 'http://3.86.172.253:5001/speech_regex';
       const path = 'https://mdl.unc.edu/api/speech_regex';
       axios.post(path, query)
         .then((res)=>{
