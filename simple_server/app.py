@@ -154,6 +154,7 @@ def speech_regex():
 
 @app.route('/upload_file_rn', methods=['GET','POST'])
 def upload_file_rn():
+    print('activated')
     if request.method == 'POST':
         # save file to storage
         f = request.files['file']
