@@ -85,11 +85,11 @@ class Search():
                     num = eval(''.join([n for n in inp_json["time"] if n.isdigit()]))
                 except:
                     num = 1
-                if "day" in inp_json["time"].lower():
+                if "day" in inp_json["time"].lower() or "days" in inp_json["time"].lower():
                     pass
-                elif "month" in inp_json["time"].lower():
+                elif "month" in inp_json["time"].lower() or "months" in inp_json["time"].lower():
                     num *= 30
-                elif "year" in inp_json["time"].lower():
+                elif "year" in inp_json["time"].lower() or "years" in inp_json["time"].lower():
                     num *= 365
                 else:
                     num = 50000

@@ -3,7 +3,7 @@
 from utils import add_quote, text2int
 
 keywords = ['LAST','ON','TOTAL','EMAIL','MSWORD','PDF','GIF']
-lower_keywords = ['all','day','year','month','subject','full']
+lower_keywords = ['all','day','days','year','years','month','months','subject','full']
 
 def str_to_mdl(inp):
     # convert `one number` to `1 number`

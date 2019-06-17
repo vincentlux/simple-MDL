@@ -138,6 +138,29 @@ def simple():
     return jsonify(response_object)
 
 
+@app.route('/simple_rn', methods=['GET', 'POST'])
+@cross_origin(origin='http://localhost:8080')
+def simple_rn():
+    response_object = {}
+    if request.method == 'POST':
+        post_data = request.get_json()
+        # get SIMPLE query and call solr to get result
+        query = post_data["query"]
+        try:
+            res = test_search.search(query)
+        except Exception as e:
+            if '?' not in query:
+                raise InvalidUsage(e,True, status_code=404)
+            else:
+                raise InvalidUsage(e,False, status_code=404)
+
+    # print(res["response"]["docs"])
+
+    # need to return {[{doc1},{doc2},{doc3}]}
+    return jsonify(res["response"]["docs"])
+
+
+
 # regex for speech to result
 @app.route('/speech_regex', methods=['GET','POST'])
 def speech_regex():
