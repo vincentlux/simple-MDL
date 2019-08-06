@@ -29,7 +29,7 @@ def text2int (textnum, numwords={}):
     tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety']
     scales = ['hundred', 'thousand', 'million', 'billion', 'trillion']
     ordinal_words = {'first':1, 'second':2, 'third':3, 'fifth':5, 'eighth':8, 'ninth':9, 'twelfth':12}
-    ordinal_endings = [('ieth', 'y'), ('th', '')]
+    ordinal_endings = [('st', ''), ('nd', ''), ('rd', ''), ('th', '')]
 
     if not numwords:
         numwords['and'] = (1, 0)
@@ -70,9 +70,9 @@ def text2int (textnum, numwords={}):
             lastunit = False
             lastscale = False
         else:
-            # for ending, replacement in ordinal_endings:
-            #     if word.endswith(ending):
-            #         word = "%s%s" % (word[:-len(ending)], replacement)
+            for ending, replacement in ordinal_endings:
+                if word.endswith(ending) and word[0].isdigit():
+                    word = "%s%s" % (word[:-len(ending)], replacement)
 
             if (not is_numword(word)) or (word == 'and' and not lastscale):
                 if onnumber:
