@@ -1,4 +1,5 @@
 import subprocess
+import datetime
 def delete_core(corename):
     subprocess.run(["bash", "delete_core.sh", str(corename)])
     print(f'successfully deleted {corename}')
@@ -29,7 +30,7 @@ def text2int (textnum, numwords={}):
     tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety']
     scales = ['hundred', 'thousand', 'million', 'billion', 'trillion']
     ordinal_words = {'first':1, 'second':2, 'third':3, 'fifth':5, 'eighth':8, 'ninth':9, 'twelfth':12}
-    ordinal_endings = [('st', ''), ('nd', ''), ('rd', ''), ('th', '')]
+    
 
     if not numwords:
         numwords['and'] = (1, 0)
@@ -70,9 +71,9 @@ def text2int (textnum, numwords={}):
             lastunit = False
             lastscale = False
         else:
-            for ending, replacement in ordinal_endings:
-                if word.endswith(ending) and word[0].isdigit():
-                    word = "%s%s" % (word[:-len(ending)], replacement)
+            # for ending, replacement in ordinal_endings:
+            #     if word.endswith(ending) and word[0].isdigit():
+            #         word = "%s%s" % (word[:-len(ending)], replacement)
 
             if (not is_numword(word)) or (word == 'and' and not lastscale):
                 if onnumber:
@@ -112,3 +113,47 @@ def text2int (textnum, numwords={}):
         curstring += repr(result + current)
 
     return curstring
+
+
+def month2int(date_time_str):
+
+    if not date_time_str.startswith('date'):
+        return date_time_str, False
+
+
+    # 1. remove potential date endings
+    ordinal_endings = [('st', ''), ('nd', ''), ('rd', ''), ('th', '')]
+
+    date_time_list = date_time_str.split()
+    for i in range(len(date_time_list)):
+        for ending, replacement in ordinal_endings:
+            if date_time_list[i].endswith(ending) and date_time_list[i][0].isdigit():
+                date_time_list[i] = "%s%s" % (date_time_list[i][:-len(ending)], replacement)
+    
+    date_time_str = ' '.join(date_time_list)
+    print(date_time_str)
+    
+    if date_time_str.startswith('date from'):
+        # date range
+        # split into two strings in order to parse time
+        try:
+            time_a, time_b = date_time_str.split(' to ')
+            time_a_obj = datetime.datetime.strptime(time_a, 'date from %B %d %Y')
+            time_a = time_a_obj.date().strftime('%m-%d-%Y')
+            time_b_obj = datetime.datetime.strptime(time_b, '%B %d %Y')
+            time_b = time_b_obj.date().strftime('%m-%d-%Y')
+            print(time_a)
+            print(time_b)
+            return 'date from ' + time_a + ' to ' + time_b, True
+        except Exception as e:
+            print(e)
+
+    else:
+        # only one date
+        try:
+            time_obj = datetime.datetime.strptime(date_time_str, 'date %B %d %Y')
+            time = time_obj.date().strftime('%m-%d-%Y')
+            print(time)
+            return 'date ' + time, True
+        except Exception as e:
+            print(e)
