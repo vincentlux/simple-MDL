@@ -110,7 +110,7 @@ class Search():
                 date_st = datetime.datetime.strptime(date_st, '%m-%d-%Y').date().strftime('%Y-%m-%d')
                 date_ed = datetime.datetime.strptime(date_ed, '%m-%d-%Y').date().strftime('%Y-%m-%d')
                 date_st = date_st + "T00:00:00Z"
-                date_ed = date_ed + "T00:00:00Z"
+                date_ed = date_ed + "T23:59:59Z"
                 date = "date:[{0} TO {1}]".format(date_st, date_ed)
             else:
                 # single date
