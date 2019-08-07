@@ -16,7 +16,7 @@ grammar = Grammar(
     sc_attach       = "MSWORD" / "PDF" / "GIF" / "msword" / "pdf" / "gif"
     sc_sub          = "full" / "subject"
     op              = op_trig space op_first space
-    op_first        = op_TOTAL / op_LAST / op_lit_ON / op_lit_name 
+    op_first        = op_TOTAL / op_LAST / op_lit_ON / op_lit_name / op_DATE / op_DATE_RANGE
     op_lit_ON       = op_lit_name* op_ON space op_lit_topic space sc_sub* space sc_attach* space op_LAST*
     op_lit_topic    = '"' chars '"'
     op_lit_name     = ('"' (chars space)+ '"' space)+
@@ -25,7 +25,11 @@ grammar = Grammar(
     op_LAST_piece   = ~"[0-9]*" 
     op_LAST_time    = ~"[0-9]*" space ~"[a-z]+"
     op_TOTAL        = "TOTAL" / "total"
+    op_DATE_RANGE   = "DATE FROM" space date_range
+    date_range      = date space "TO" space date
+    op_DATE         = "DATE" space date
     op_trig         = "?"
+    date            = '"' ~"[0-9]+(-[0-9]+)+" '"'
     space           = " "*
     chars           = ~"[A-z0-9 ]*"
     """
@@ -71,6 +75,13 @@ class EntryParser(parsimonious.NodeVisitor):
         else:
             self.entry['piece'] = node.text
     
+    def visit_date(self, node, vc):
+        self.entry['date_range'] = node.text
+
+    def visit_date_range(self, node, vc):
+        self.entry['date_range'] = node.text
+
+
     def visit_sc_attach(self, node, vc):
         self.entry['attachment'] = node.text
 

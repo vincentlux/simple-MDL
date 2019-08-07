@@ -1,6 +1,7 @@
 import pysolr
 import requests
 import argparse
+import datetime
 import cymantix_grammar as cg
 
 class Search():
@@ -99,6 +100,30 @@ class Search():
                     date = "date:[NOW-{:d}DAY TO NOW]".format(num)
         except:
             date = "date:*"
+
+        # convert date range to solr query
+        try:
+            date_range = inp_json["date_range"].replace('"', '')
+            if "TO" in date_range:
+                # date range
+                date_st, date_ed = date_range.split(' TO ')
+                date_st = datetime.datetime.strptime(date_st, '%m-%d-%Y').date().strftime('%Y-%m-%d')
+                date_ed = datetime.datetime.strptime(date_ed, '%m-%d-%Y').date().strftime('%Y-%m-%d')
+                date_st = date_st + "T00:00:00Z"
+                date_ed = date_ed + "T00:00:00Z"
+                date = "date:[{0} TO {1}]".format(date_st, date_ed)
+            else:
+                # single date
+                date = datetime.datetime.strptime(date_range, '%m-%d-%Y').date().strftime('%Y-%m-%d')
+                date_st = date + "T00:00:00Z"
+                date_ed = date + "T23:59:59Z"
+                date = "date:[{0} TO {1}]".format(date_st, date_ed)
+        except Exception as e:
+            print(e)
+            date = "date:*"
+
+            
+
         # combine string
         query = from_name
         fquery = subject + " AND " + content + " AND " + date
