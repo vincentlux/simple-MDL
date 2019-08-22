@@ -88,10 +88,9 @@ def text2int (textnum, numwords={}):
                 scale, increment = from_numword(word)
                 onnumber = True
 
-                if lastunit and (word not in scales):                                                                                                                                                                                                                                         
-                    # Assume this is part of a string of individual numbers to                                                                                                                                                                                                                
-                    # be flushed, such as a zipcode "one two three four five"                                                                                                                                                                                                                 
-                    curstring += repr(result + current)                                                                                                                                                                                                                                       
+                if lastunit and (word not in scales):       
+                    # Assume this is part of a string of individual numbers to                                                                                      # be flushed, such as a zipcode "one two three four five"                                                                                                                                                                                                                 
+                    curstring += repr(result + current)
                     result = current = 0                                                                                                                                                                                                                                                      
 
                 if scale > 1:                                                                                                                                                                                                                                                                 
@@ -117,7 +116,7 @@ def text2int (textnum, numwords={}):
 
 def month2int(date_time_str):
 
-    if not date_time_str.startswith('date'):
+    if not date_time_str.startswith('date '):
         return date_time_str, False
 
 
@@ -147,6 +146,7 @@ def month2int(date_time_str):
             return 'date from ' + time_a + ' to ' + time_b, True
         except Exception as e:
             print(e)
+            return 'date from', False
 
     else:
         # only one date
@@ -157,3 +157,4 @@ def month2int(date_time_str):
             return 'date ' + time, True
         except Exception as e:
             print(e)
+            return 'date ', False
