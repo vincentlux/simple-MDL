@@ -26,7 +26,9 @@ grammar = Grammar(
     op_LAST_time    = ~"[0-9]*" space ~"[a-z]+"
     op_TOTAL        = "TOTAL" / "total"
     op_DATE_RANGE   = "DATE FROM" space date_range
-    date_range      = date space "TO" space date
+    date_range      = date_st "TO" date_ed
+    date_ed         = space date
+    date_st         = date space
     op_DATE         = "DATE" space date
     op_trig         = "?"
     date            = '"' ~"[0-9]+(-[0-9]+)+" '"'
@@ -76,10 +78,15 @@ class EntryParser(parsimonious.NodeVisitor):
             self.entry['piece'] = node.text
     
     def visit_date(self, node, vc):
-        self.entry['date_range'] = node.text
+        self.entry['date_end'] = node.text
 
-    def visit_date_range(self, node, vc):
-        self.entry['date_range'] = node.text
+    # def visit_date_range(self, node, vc):
+    #     self.entry['date_range'] = node.text
+    def visit_date_st(self, node, vc):
+        self.entry['date_start'] = node.text
+    
+    def visit_date_ed(self, node, vc):
+        self.entry['date_end'] = node.text
 
 
     def visit_sc_attach(self, node, vc):
